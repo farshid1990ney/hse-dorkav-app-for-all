@@ -3784,9 +3784,139 @@
     })();
 </script>
 
-<script src="hse-common.js"></script>
+<!-- <script src="hse-common.js"></script> DISABLED FOR SECURITY - see inline enforcer below -->
 
 
 
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1b2c600cbe1b868',t:'MTc4NDA1NTY1OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1bb287e5d199f0e',t:'MTc4NDE0MzU3OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1b2c600cbe1b868',t:'MTc4NDA1NTY1OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+<!-- ===== SUPER SECURITY ENFORCER v5.3 - جلوگیری از باز شدن مجوزها توسط هر اسکریپت دیگر ===== -->
+<script>
+(function() {
+  console.log('🛡️ Super Enforcer v5.3 active');
+  const PERM_MAP_KEYS = ['training','near_miss','nonconformity','quiz','tbm','specialist_software','ptw','summons_warning','reward_discipline','safety_assistant','lucky_wheel','safety_culture','procedures','sds'];
+  const PERM_MAP_IDS = {
+    training: ['amoozesh-grid','amoozesh-drawer'],
+    near_miss: ['nearmiss-grid','nearmiss-drawer'],
+    nonconformity: ['anomali-grid','anomali-drawer'],
+    quiz: ['quiz-grid','quiz-drawer'],
+    tbm: ['tbm-grid','tbm-drawer'],
+    specialist_software: ['narmafzar-grid','narmafzar-drawer'],
+    ptw: ['ptw-grid','ptw-drawer'],
+    summons_warning: ['ehzar-grid','ehzar-drawer'],
+    reward_discipline: ['tashvighi-grid','tashvighi-drawer'],
+    safety_assistant: ['hamyar-grid','hamyar-drawer'],
+    lucky_wheel: ['gardooneh-grid','gardooneh-drawer'],
+    safety_culture: ['safety-culture-grid'],
+    procedures: ['procedures-grid'],
+    sds: ['sds-grid','sds-drawer']
+  };
+  
+  let currentAllowed = {}; // فقط true های واقعی
+
+  function isAllowed(key) {
+    return currentAllowed[key] === true;
+  }
+
+  function enforce() {
+    // اگر currentAllowed خالی یا همه false باشد، همه را مخفی نگه دار
+    Object.keys(PERM_MAP_IDS).forEach(function(key) {
+      const allowed = isAllowed(key);
+      PERM_MAP_IDS[key].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (allowed) {
+          el.classList.remove('permission-hidden');
+          el.style.display = '';
+        } else {
+          el.classList.add('permission-hidden');
+          // force inline for extra safety against other scripts
+          el.style.display = 'none';
+        }
+      });
+    });
+    // همیشه 2 آیتم عمومی باید دیده شوند
+    const publicIds = ['emergencySection'];
+    // شماره اضطراری و معرفی شرکت کلاس permission-hidden ندارند و همیشه دیده می‌شوند
+  }
+
+  // Override applyPermissions اصلی تا currentAllowed بروز شود
+  const originalApply = window.applyPermissions;
+  window.applyPermissions = function(perms, personnel) {
+    console.log('🔐 applyPermissions intercepted', perms, personnel);
+    if (!perms || typeof perms !== 'object') perms = {};
+    currentAllowed = {};
+    Object.keys(perms).forEach(function(k) {
+      if (perms[k] === true) currentAllowed[k] = true;
+    });
+    // call original if exists
+    if (typeof originalApply === 'function') {
+      try { originalApply(perms, personnel); } catch(e) {}
+    }
+    // enforce with inline style
+    setTimeout(enforce, 10);
+    setTimeout(enforce, 100);
+    setTimeout(enforce, 500);
+  };
+
+  window.hideAllPermissionItems = function() {
+    currentAllowed = {};
+    enforce();
+  };
+
+  // MutationObserver - اگر هر اسکریپتی کلاس را حذف کرد، دوباره مخفی کن
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(m) {
+      if (m.type === 'attributes' && m.attributeName === 'class') {
+        const el = m.target;
+        // اگر این المان جزو مجوزدارها است و currentAllowed false است، دوباره مخفی کن
+        Object.keys(PERM_MAP_IDS).forEach(function(key) {
+          if (PERM_MAP_IDS[key].includes(el.id)) {
+            if (!isAllowed(key)) {
+              if (!el.classList.contains('permission-hidden')) {
+                console.warn('⚠️ Unauthorized unhide blocked for', el.id);
+                el.classList.add('permission-hidden');
+                el.style.display = 'none';
+              }
+            }
+          }
+        });
+      }
+    });
+  });
+
+  // Observe all grid/drawer items
+  function startObserving() {
+    Object.values(PERM_MAP_IDS).flat().forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el, { attributes: true, attributeFilter: ['class', 'style'] });
+    });
+  }
+
+  // Enforce periodically for 10 seconds after load (مقابل hse-common.js و کش)
+  let enforceInterval = setInterval(enforce, 300);
+  setTimeout(function() { clearInterval(enforceInterval); }, 10000);
+
+  document.addEventListener('DOMContentLoaded', function() {
+    hideAllPermissionItems();
+    startObserving();
+    enforce();
+  });
+
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      hideAllPermissionItems();
+      startObserving();
+      enforce();
+      console.log('🛡️ Final enforce after load - allowed:', currentAllowed);
+    }, 200);
+  });
+
+  // Debug helper
+  window.__debugPerms = function() {
+    return { allowed: currentAllowed, rawLocal: localStorage.getItem('hse_user_permissions'), byUser: localStorage.getItem('hse_user_permissions_by_user') };
+  };
+
+})();
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1bb3e476b25d982',t:'MTc4NDE0NDQ3Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
