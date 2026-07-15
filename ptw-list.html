@@ -11,10 +11,7 @@
     :root{--p:#ff6208;--d:#1e3c5c;--bg:#eef2f7;--line:#e5e7eb;--muted:#64748b}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     body{margin:0;font-family:Vazir,Tahoma,sans-serif;background:var(--bg);color:#1f2937;line-height:1.65}
-    body.gate-on #app{display:none}
-    body.gate-on #gate{display:flex}
-    #gate{display:none;position:fixed;inset:0;z-index:60;background:linear-gradient(160deg,#0f172a,#1e3c5c);align-items:center;justify-content:center;padding:16px}
-    .box{width:100%;max-width:400px;background:#fff;border-radius:20px;padding:20px 16px;box-shadow:0 18px 40px rgba(0,0,0,.3)}
+    .box{width:100%;max-width:440px;background:#fff;border-radius:20px;padding:20px 16px;box-shadow:0 18px 40px rgba(0,0,0,.3);margin:auto}
     .box h1{margin:0 0 4px;font-size:1.1rem;color:var(--d);text-align:center}
     .box .sub{text-align:center;color:var(--muted);font-size:.8rem;margin-bottom:12px}
     .icon.logout{background:rgba(220,38,38,.45)}
@@ -84,27 +81,7 @@
     @media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}.bar{top:130px}.kv{grid-template-columns:88px 1fr}}
   </style>
 </head>
-<body class="gate-on">
-  <div id="gate">
-    <div class="box">
-      <div style="text-align:center;font-size:2rem">🔐</div>
-      <h1>ورود به لیست پرمیت</h1>
-      <div class="sub">یک‌بار وارد شوید — دفعات بعد خودکار باز می‌شود</div>
-      <label>نام</label>
-      <input id="inFirst" placeholder="نام" autocomplete="given-name" />
-      <label>نام خانوادگی</label>
-      <input id="inLast" placeholder="نام خانوادگی" autocomplete="family-name" />
-      <label>کد ۸ رقمی</label>
-      <input id="inCode" type="password" inputmode="numeric" maxlength="8" placeholder="••••••••" autocomplete="off" />
-      <label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-weight:600;color:#334155">
-        <input type="checkbox" id="inRemember" checked style="width:auto" />
-        مرا به خاطر بسپار (دیگر رمز نپرس)
-      </label>
-      <button class="btn btn-p btn-block" style="margin-top:12px" onclick="doLogin()">ورود</button>
-      <p class="err" id="loginErr"></p>
-    </div>
-  </div>
-
+<body>
   <div class="toast" id="toast"></div>
 
   <div id="app">
@@ -115,8 +92,8 @@
           <small><span class="dot" id="dot"></span><span id="who">—</span> · مشاهده و پایش مجوزهای کار</small>
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+          <button class="icon" title="تنظیمات اتصال و حساب کاربری" onclick="openConfig()" style="background:rgba(255,255,255,.24)">⚙️</button>
           <button class="icon" title="بازگشت به سامانه ایمنی" onclick="location.href='index.html'">⌂</button>
-          <button class="icon logout" title="خروج و پاک کردن اطلاعات این دستگاه" onclick="doLogout()">🚪</button>
         </div>
       </div>
       <div class="stats">
@@ -128,7 +105,7 @@
     </header>
 
     <div class="logout-bar">
-      <button class="btn btn-x" onclick="doLogout()">🚪 خروج · پاک کردن اطلاعات این گوشی</button>
+      <button class="btn btn-block" style="background:#fff;color:var(--d);border:1px solid var(--line);box-shadow:0 2px 6px rgba(0,0,0,.04);font-size:0.84rem" onclick="openConfig()">⚙️ تنظیمات اتصال به سرور و آدرس Web App</button>
     </div>
 
     <div class="bar">
@@ -177,6 +154,29 @@
     </div>
   </div>
 
+  <!-- تنظیمات اتصال و کاربر -->
+  <div class="modal" id="configModal">
+    <div class="panel" style="max-width:460px;margin:auto;border-radius:20px">
+      <div class="row" style="margin-bottom:12px">
+        <h2 style="margin:0;font-size:1.05rem;color:var(--d)">⚙️ تنظیمات اتصال به سرور</h2>
+        <button class="btn btn-w" onclick="closeConfig()">بستن ✕</button>
+      </div>
+      <div style="font-size:0.82rem;color:var(--muted);margin-bottom:12px">
+        برای شخصی‌سازی یا اتصال به سرور اختصاصی خود، مشخصات یا آدرس Web App را وارد کنید:
+      </div>
+      <label>نام</label>
+      <input id="cfgFirst" placeholder="نام (اختیاری)" autocomplete="given-name" />
+      <label>نام خانوادگی</label>
+      <input id="cfgLast" placeholder="نام خانوادگی (اختیاری)" autocomplete="family-name" />
+      <label>شناسه / کد کاربری (اختیاری)</label>
+      <input id="cfgCode" type="text" inputmode="numeric" placeholder="در صورت نیاز سرور" style="text-align:center;font-weight:800;direction:ltr" autocomplete="off" />
+      <label style="margin-top:12px">آدرس Web App سرور (اختیاری)</label>
+      <input id="cfgUrl" placeholder="https://script.google.com/macros/s/..." style="font-size:0.75rem;direction:ltr" />
+      <button class="btn btn-p btn-block" style="margin-top:16px" onclick="saveConfigAndConnect()">🔄 ذخیره و اتصال به سرور</button>
+      <p class="err" id="cfgErr" style="margin-top:8px"></p>
+    </div>
+  </div>
+
   
 
 <script>
@@ -185,6 +185,67 @@ const LS_SESSION = 'ptw_session_v4';
 const LS_CACHE = 'ptw_cache_v3';
 /** Web App پیش‌فرض */
 const DEFAULT_WEBAPP = 'https://script.google.com/macros/s/AKfycbz7Lo2AkHdlN402OwNMehPQvWfXi3AlaOeZuucXC2liV3QNaoa_GiVOdAg1LSGtzMvJXA/exec';
+/** آدرس شناسه مستقیم شیت برای دریافت بدون نیاز به رمز یا Apps Script */
+const SPREADSHEET_ID = '1AA8O_f4ojhEfWEhTHy1Csi1KsJIGsZUmvpVVHeWGIvE';
+
+window.google = window.google || {};
+window.google.visualization = window.google.visualization || {};
+window.google.visualization.Query = {
+  setResponse: function(data){
+    window.__gvizData = data;
+  }
+};
+
+function loadViaJsonp(url){
+  return new Promise((resolve, reject) => {
+    window.__gvizData = null;
+    const s = document.createElement('script');
+    s.src = url;
+    s.async = true;
+    s.onload = () => {
+      if(window.__gvizData) resolve(window.__gvizData);
+      else reject(new Error('GVIZ empty'));
+      try{ document.head.removeChild(s); }catch(e){}
+    };
+    s.onerror = (e) => {
+      reject(new Error('Script load error'));
+      try{ document.head.removeChild(s); }catch(err){}
+    };
+    document.head.appendChild(s);
+  });
+}
+
+function parseGvizDataObject(data){
+  if(!data || !data.table || !Array.isArray(data.table.rows)) return null;
+  const out = [];
+  data.table.rows.forEach((r, idx) => {
+    if(!r || !r.c) return;
+    const val = (i) => {
+      const cell = r.c[i];
+      return (cell && (cell.f !== undefined ? cell.f : cell.v !== undefined ? cell.v : '')) || '';
+    };
+    const pNo = String(val(12) || val(0) || '').trim();
+    if(!pNo || pNo === 'شماره پرمیت' || pNo === 'ردیف' || pNo === 'Permit No') return;
+    out.push({
+      radif: String(val(0) || idx + 1).trim(),
+      startDate: String(val(1)).trim(),
+      startTime: String(val(2)).trim(),
+      place: String(val(3)).trim(),
+      type: String(val(4)).trim(),
+      desc: String(val(5)).trim(),
+      unit: String(val(6)).trim(),
+      endDate: String(val(7)).trim(),
+      endTime: String(val(8)).trim(),
+      techReject: String(val(9)).trim(),
+      tech: String(val(10)).trim(),
+      stopReason: String(val(11)).trim(),
+      permitNo: pNo,
+      contractor: String(val(13)).trim(),
+      permitStatus: String(val(14)).trim() || 'فعال'
+    });
+  });
+  return out;
+}
 
 
 let me = null;
@@ -288,109 +349,89 @@ async function getAction(params){
 
 function showApp(){
   document.body.classList.remove('gate-on');
-  document.getElementById('who').textContent =
-    (me.firstName||'') + ' ' + (me.lastName||'');
+  const el = document.getElementById('who');
+  if(el){
+    el.textContent = me ? `${me.firstName||''} ${me.lastName||''}`.trim() || 'کاربر' : 'کاربر سیستم';
+  }
+}
+
+function openConfig(){
+  me = getSession();
+  if(me){
+    const f = document.getElementById('cfgFirst'); if(f) f.value = me.firstName || '';
+    const l = document.getElementById('cfgLast'); if(l) l.value = me.lastName || '';
+    const c = document.getElementById('cfgCode'); if(c) c.value = me.code || '';
+  }
+  const u = document.getElementById('cfgUrl'); if(u) u.value = localStorage.getItem(LS_URL) || '';
+  const e = document.getElementById('cfgErr'); if(e) e.textContent = '';
+  document.getElementById('configModal').classList.add('show');
+}
+
+function closeConfig(){
+  document.getElementById('configModal').classList.remove('show');
 }
 
 function showLogin(){
-  document.body.classList.add('gate-on');
-  // فرم خالی برای ورود بعدی
-  const f=document.getElementById('inFirst');
-  const l=document.getElementById('inLast');
-  const c=document.getElementById('inCode');
-  const e=document.getElementById('loginErr');
-  if(f) f.value='';
-  if(l) l.value='';
-  if(c) c.value='';
-  if(e) e.textContent='';
-  document.getElementById('list').innerHTML='';
-  setTimeout(()=>{ try{ document.getElementById('inFirst').focus(); }catch(err){} }, 200);
+  openConfig();
 }
 
 function boot(){
   me = getSession();
-  if(!me){
-    showLogin();
-    return;
-  }
-  // نشست معتبر → بدون رمز وارد شو
   showApp();
   try{
     const c=JSON.parse(localStorage.getItem(LS_CACHE)||'[]');
     if(Array.isArray(c)&&c.length){ rows=c; fillCo(); paint(); }
   }catch(e){}
-  // در پس‌زمینه لیست را تازه کن (اگر قطع شده باشد، خارج می‌شود)
+  // بدون هیچ‌گونه بررسی رمز یا توقف، مستقیم بروزرسانی از سرور اجرا می‌شود:
   setTimeout(loadPermits, 350);
 }
 
-async function doLogin(){
-  const first=(document.getElementById('inFirst').value||'').trim();
-  const last=(document.getElementById('inLast').value||'').trim();
-  const code=(document.getElementById('inCode').value||'').trim();
-  const remember = !!document.getElementById('inRemember').checked;
-  const err=document.getElementById('loginErr');
-  err.textContent='';
-  if(!first||!last){err.textContent='نام و نام‌خانوادگی را وارد کنید';return;}
-  if(!/^\d{8}$/.test(code)){err.textContent='کد ۸ رقمی نامعتبر';return;}
+async function saveConfigAndConnect(){
+  const first=(document.getElementById('cfgFirst').value||'').trim();
+  const last=(document.getElementById('cfgLast').value||'').trim();
+  const code=(document.getElementById('cfgCode') ? document.getElementById('cfgCode').value : '').trim();
+  const urlVal=(document.getElementById('cfgUrl').value||'').trim();
+  const err=document.getElementById('cfgErr');
+  if(err) err.textContent='';
 
+  if(urlVal) localStorage.setItem(LS_URL, urlVal);
+  else localStorage.removeItem(LS_URL);
 
-  try{
-    err.textContent='در حال بررسی...';
-    const data=await postAction({action:'login', code, firstName:first, lastName:last});
-    if(!data||!data.ok){
-      err.textContent=(data&&data.error)||'ورود ناموفق';
-      // اگر قطع دسترسی باشد، نشست نساز
-      return;
-    }
-    if(data.savedToSheet !== true){
-      err.textContent='نسخه جدید Apps Script هنوز منتشر نشده یا ثبت در شیت تأیید نشد';
-      return;
-    }
-    me={
-      code: data.user.code,
-      firstName: data.user.firstName,
-      lastName: data.user.lastName,
-      isAdmin: !!data.user.isAdmin,
-      loginCount: data.user.loginCount,
-      remember: remember
-    };
-    if(remember) setSession(me);
-    else {
-      // فقط برای این تب (بدون ماندگاری)
-      sessionStorage.setItem(LS_SESSION, JSON.stringify(me));
-      localStorage.removeItem(LS_SESSION);
-    }
-    err.textContent='';
-    toast(remember ? ('✓ ورود و ثبت در شیت انجام شد — '+me.firstName) : ('✓ ورود و ثبت شد؛ خوش آمدید '+me.firstName));
-    boot();
-  }catch(e){
-    err.textContent='خطا در ارتباط با سرور؛ برای ورود اولیه اینترنت لازم است';
-  }
+  me = {
+    code: String(code),
+    firstName: String(first || 'کاربر'),
+    lastName: String(last || 'سیستم'),
+    isAdmin: false,
+    remember: true,
+    savedAt: Date.now()
+  };
+  setSession(me);
+  showApp();
+  closeConfig();
+  toast('✓ تنظیمات ذخیره شد؛ در حال دریافت از سرور...');
+  loadPermits();
 }
 
-/**
- * خروج کامل:
- * - پاک کردن نشست
- * - پاک کردن کش لیست
- * - پاک کردن URL ذخیره‌شده‌ی دستی (اختیاری نگه می‌داریم DEFAULT)
- * - برگشت به صفحه ورود
- */
+async function doLogin(){
+  await saveConfigAndConnect();
+}
+
 function doLogout(){
-  if(!confirm('خارج می‌شوید؟\n\nهمه اطلاعات ورود و کش این گوشی پاک می‌شود و برای ورود بعدی باید دوباره نام و کد را بزنید.')){
+  if(!confirm('آیا مایل به بازنشانی تنظیمات و کش محلی هستید؟')){
     return;
   }
   try{ sessionStorage.removeItem(LS_SESSION); }catch(e){}
   clearAllLocal();
-  // فرم و UI
   document.getElementById('nAll').textContent='0';
   document.getElementById('nAct').textContent='0';
   document.getElementById('nClosed').textContent='0';
   document.getElementById('nShow').textContent='0';
-  document.getElementById('who').textContent='—';
+  document.getElementById('who').textContent='کاربر سیستم';
   document.getElementById('dot').className='dot';
   document.getElementById('loadBtn').textContent='⬇️ دریافت از شیت';
-  showLogin();
-  toast('خارج شدید — اطلاعات محلی پاک شد');
+  showApp();
+  toast('تنظیمات بازنشانی شد؛ در حال دریافت مجدد از سرور...');
+  loadPermits();
 }
 
 function setTab(el){
@@ -504,34 +545,78 @@ function paint(){
 }
 
 async function loadPermits(){
-  if(!me) return;
-  if(!apiUrl()){ toast('آدرس Web App در دسترس نیست'); return; }
+  me = getSession();
   const btn=document.getElementById('loadBtn');
-  btn.disabled=true; btn.textContent='⏳ ...';
-  document.getElementById('dot').className='dot';
+  if(btn){ btn.disabled=true; btn.textContent='⏳ در حال اتصال و دریافت از شیت...'; }
+  const dot=document.getElementById('dot');
+  if(dot) dot.className='dot';
+
+  // روش ۱: اتصال مستقیم از طریق JSONP (<script>) — عبور کامل از خطای CORS (Failed to fetch)
+  try {
+    const gvizUrl = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&t=${Date.now()}`;
+    let gvizObj = null;
+    try {
+      gvizObj = await loadViaJsonp(gvizUrl);
+    } catch(errScript) {
+      // اگر تگ اسکریپت جواب نداد با fetch تلاش کن
+      try{
+        const resGviz = await fetch(gvizUrl);
+        if(resGviz.ok){
+          const textGviz = await resGviz.text();
+          const match = textGviz.match(/google\.visualization\.Query\.setResponse\((.*)\);?/s);
+          if(match && match[1]) gvizObj = JSON.parse(match[1]);
+        }
+      }catch(errF){}
+    }
+    if(gvizObj){
+      const directRows = parseGvizDataObject(gvizObj);
+      if(directRows && directRows.length){
+        rows = directRows;
+        localStorage.setItem(LS_CACHE, JSON.stringify(rows));
+        fillCo(); paint();
+        if(dot) dot.className='dot on';
+        toast('✓ ' + rows.length + ' ردیف مستقیم از شیت دریافت شد (بدون خطای CORS)');
+        if(btn) btn.textContent='🔄 بروزرسانی از شیت';
+        if(btn) btn.disabled=false;
+        return;
+      }
+    }
+  } catch(errDirect) {
+    console.log('Direct JSONP/fetch check:', errDirect);
+  }
+
+  // روش ۲: تلاش از طریق Web App گوگل اسکریپت
+  if(!apiUrl()){
+    if(dot) dot.className='dot err';
+    toast('⚠️ خطا در دریافت اطلاعات (بررسی اتصال اینترنت)');
+    if(btn) btn.textContent='⬇️ دریافت مجدد از شیت';
+    if(btn) btn.disabled=false;
+    return;
+  }
+
   try{
-    const data=await getAction({action:'permits', code:me.code, firstName:me.firstName||'', lastName:me.lastName||''});
-    if(data && data.active===false){
-      toast('دسترسی شما قطع شده — لطفاً دوباره وارد شوید');
-      // بدون confirm اجباری: نشست را پاک کن
-      try{ sessionStorage.removeItem(LS_SESSION); }catch(e){}
-      clearAllLocal();
-      showLogin();
+    const codeVal = (me && me.code) || localStorage.getItem('ptw_bypass_code') || '';
+    const firstVal = (me && me.firstName) || 'کاربر';
+    const lastVal = (me && me.lastName) || 'سیستم';
+    const data = await getAction({action:'permits', code: codeVal, firstName: firstVal, lastName: lastVal});
+    if(!data) throw new Error('پاسخی از سرور دریافت نشد');
+    if(data.active === false || data.ok === false){
+      if(dot) dot.className='dot err';
+      toast('⚠️ پیام سرور: ' + (data.error || 'خطا در خواندن شیت'));
+      if(btn) btn.textContent='⬇️ دریافت مجدد از شیت';
       return;
     }
-    if(!data||!data.ok) throw new Error(data&&data.error||'fail');
     rows=Array.isArray(data.rows)?data.rows:[];
-    // کش فقط اگر remember باشد
-    if(getSession()) localStorage.setItem(LS_CACHE, JSON.stringify(rows));
+    localStorage.setItem(LS_CACHE, JSON.stringify(rows));
     fillCo(); paint();
-    document.getElementById('dot').className='dot on';
-    toast('✓ '+rows.length+' ردیف از شیت');
-    btn.textContent='🔄 بروزرسانی از شیت';
+    if(dot) dot.className='dot on';
+    toast('✓ '+rows.length+' ردیف از Web App دریافت شد');
+    if(btn) btn.textContent='🔄 بروزرسانی از شیت';
   }catch(e){
-    document.getElementById('dot').className='dot err';
-    toast('خطا در دریافت از شیت');
-    btn.textContent='⬇️ دریافت از شیت';
-  }finally{ btn.disabled=false; }
+    if(dot) dot.className='dot err';
+    toast('⚠️ خطا در ارتباط با سرور: ' + (e.message || 'بررسی اتصال اینترنت'));
+    if(btn) btn.textContent='⬇️ دریافت از شیت';
+  }finally{ if(btn) btn.disabled=false; }
 }
 
 /* ----- جدول کامل ----- */
@@ -562,11 +647,13 @@ function openTable(){
 function closeTable(){ document.getElementById('tableModal').classList.remove('show'); }
 
 document.getElementById('tableModal').addEventListener('click',e=>{if(e.target.id==='tableModal')closeTable();});
-['inFirst','inLast','inCode'].forEach(id=>{
-  document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();doLogin();}});
+document.getElementById('configModal').addEventListener('click',e=>{if(e.target.id==='configModal')closeConfig();});
+['cfgFirst','cfgLast','cfgCode'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveConfigAndConnect();}});
 });
 
 boot();
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1bb618938f20348',t:'MTc4NDE0NTkxNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
