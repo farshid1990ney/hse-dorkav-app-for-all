@@ -3468,6 +3468,8 @@
     const ACT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz7Lo2AkHdlN402OwNMehPQvWfXi3AlaOeZuucXC2liV3QNaoa_GiVOdAg1LSGtzMvJXA/exec';
     const ACT_KEY  = 'hse_user_activated';
     const PERM_KEY = 'hse_user_permissions';
+    const PERM_KEY_BY_USER = 'hse_user_permissions_by_user';
+    const PERM_KEY_PERSONNEL = 'hse_user_permissions_personnel';
 
     // کلیدهای این نگاشت دقیقاً با خروجی Apps Script و ستون‌های Checkbox هماهنگ‌اند.
     // معرفی شرکت و شماره‌های اضطراری عمومی هستند و در این فهرست قرار ندارند.
@@ -3497,68 +3499,123 @@
         document.getElementById('act-error').classList.remove('show');
     }
 
-    function applyPermissions(perms) {
-        perms = perms || {};
+    // FIXED v5.2: تضمینی همه آیتم‌های حساس را مخفی می‌کند (Deny by Default)
+    function hideAllPermissionItems() {
         Object.keys(PERM_MAP).forEach(function(key) {
-            const allowed = perms[key] === true;
             PERM_MAP[key].forEach(function(id) {
                 const el = document.getElementById(id);
                 if (!el) return;
-                el.classList.toggle('permission-hidden', !allowed);
-                el.setAttribute('aria-hidden', allowed ? 'false' : 'true');
+                el.classList.add('permission-hidden');
+                el.setAttribute('aria-hidden', 'true');
             });
         });
-        localStorage.setItem(PERM_KEY, JSON.stringify(perms));
     }
 
-    function activateApp(userData, perms) {
+    // FIXED v5.2: فقط مقدار صریح true مجوز می‌دهد، هر چیز دیگر = مخفی
+    function applyPermissions(perms, personnel) {
+        if (!perms || typeof perms !== 'object' || Array.isArray(perms)) perms = {};
+        Object.keys(PERM_MAP).forEach(function(key) {
+            const allowed = perms[key] === true; // strict
+            PERM_MAP[key].forEach(function(id) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (allowed) {
+                    el.classList.remove('permission-hidden');
+                    el.setAttribute('aria-hidden', 'false');
+                } else {
+                    el.classList.add('permission-hidden');
+                    el.setAttribute('aria-hidden', 'true');
+                }
+            });
+        });
+        try {
+            if (personnel) {
+                const allCache = JSON.parse(localStorage.getItem(PERM_KEY_BY_USER) || '{}');
+                allCache[personnel] = perms;
+                localStorage.setItem(PERM_KEY_BY_USER, JSON.stringify(allCache));
+                localStorage.setItem(PERM_KEY_PERSONNEL, personnel);
+            }
+            localStorage.setItem(PERM_KEY, JSON.stringify(perms));
+        } catch(e) {}
+        console.log('[PERM] Applied for', personnel || 'unknown', perms);
+    }
+
+    function activateApp(userData, perms, personnelHint) {
+        const personnel = personnelHint || userData.personnel;
+        hideAllPermissionItems();
         localStorage.setItem(ACT_KEY, JSON.stringify(userData));
         document.getElementById('activation-overlay').classList.add('hidden');
         document.getElementById('header-username').textContent = '👤 ' + userData.fullname;
-        applyPermissions(perms || JSON.parse(localStorage.getItem(PERM_KEY) || '{}'));
+        // FIXED: اگر perms خالی باشد، مخفی می‌ماند
+        applyPermissions(perms || {}, personnel);
     }
 
     function revokeAccess(msg) {
         localStorage.removeItem(ACT_KEY);
         localStorage.removeItem(PERM_KEY);
+        localStorage.removeItem(PERM_KEY_PERSONNEL);
+        hideAllPermissionItems();
         document.getElementById('header-username').textContent = '';
         document.getElementById('activation-overlay').classList.remove('hidden');
         if (msg) showError(msg);
     }
 
     async function verifyStatusWithServer(personnel) {
+        if (!personnel) return;
         try {
-            const res  = await fetch(ACT_ENDPOINT + '?action=check_status&personnel=' + encodeURIComponent(personnel));
+            const res = await fetch(ACT_ENDPOINT + '?action=check_status&personnel=' + encodeURIComponent(personnel), { cache: 'no-store' });
             const data = await res.json();
+            console.log('[PERM] Server check_status', data);
             if (data && data.success) {
                 if (data.active === false) {
                     revokeAccess('⛔ دسترسی شما توسط مدیر سامانه مسدود شده است.');
-                } else if (data.permissions) {
-                    applyPermissions(data.permissions);
+                } else if (data.permissions && typeof data.permissions === 'object') {
+                    applyPermissions(data.permissions, personnel);
+                } else {
+                    hideAllPermissionItems();
                 }
+            } else {
+                console.warn('[PERM] check_status failed, staying hidden');
+                hideAllPermissionItems();
             }
-        } catch (e) { /* آفلاین: مجوزهای کش شده را نگه می‌داریم */ }
+        } catch (e) { 
+            console.warn('[PERM] offline or error, keeping hidden', e);
+        }
     }
 
-    // بررسی اولیه هنگام باز شدن
+    // بررسی اولیه هنگام باز شدن - FIXED per-user cache
     (function checkActivation() {
+        hideAllPermissionItems();
         try {
             const stored = localStorage.getItem(ACT_KEY);
             if (stored) {
                 const u = JSON.parse(stored);
-                if (u && u.fullname) {
+                if (u && u.fullname && u.personnel) {
                     document.getElementById('activation-overlay').classList.add('hidden');
                     document.getElementById('header-username').textContent = '👤 ' + u.fullname;
-                    const cachedPerms = localStorage.getItem(PERM_KEY);
-                    if (cachedPerms) applyPermissions(JSON.parse(cachedPerms));
-                    if (u.personnel) verifyStatusWithServer(u.personnel);
+                    try {
+                        const cachedByUser = JSON.parse(localStorage.getItem(PERM_KEY_BY_USER) || '{}');
+                        const cached = cachedByUser[u.personnel];
+                        if (cached && typeof cached === 'object') {
+                            console.log('[PERM] Using per-user cached perms for', u.personnel);
+                            applyPermissions(cached, u.personnel);
+                        } else {
+                            console.log('[PERM] No per-user cache, hide all until server');
+                            hideAllPermissionItems();
+                        }
+                    } catch(e) {
+                        hideAllPermissionItems();
+                    }
+                    verifyStatusWithServer(u.personnel);
                     return;
                 }
             }
-        } catch(e) {}
+        } catch(e) {
+            console.error('[PERM] checkActivation error', e);
+        }
+        hideAllPermissionItems();
     })();
 
-    // همگام‌سازی دوره‌ای Checkboxها؛ تغییر مدیر بدون خروج کاربر نیز اعمال می‌شود.
     function refreshCurrentUserPermissions() {
         try {
             const stored = localStorage.getItem(ACT_KEY);
@@ -3572,13 +3629,21 @@
         if (!document.hidden) refreshCurrentUserPermissions();
     });
 
-    // جلوگیری از کلیک روی آیتم‌های قفل‌شده
+    // جلوگیری از کلیک روی آیتم‌های قفل‌شده + مخفی
     document.addEventListener('click', function(e) {
         const target = e.target.closest('[data-locked]');
         if (target) {
             e.preventDefault();
             e.stopPropagation();
             showToast('🔒 شما به این بخش دسترسی ندارید.', 'danger', 2500);
+            return;
+        }
+        const hiddenTarget = e.target.closest('.permission-hidden');
+        if (hiddenTarget) {
+            e.preventDefault();
+            e.stopPropagation();
+            showToast('🔒 دسترسی ندارید - منتظر تایید مدیر باشید', 'danger', 2000);
+            return false;
         }
     }, true);
 
@@ -3723,5 +3788,5 @@
 
 
 
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1b2c600cbe1b868',t:'MTc4NDA1NTY1OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1b2c600cbe1b868',t:'MTc4NDA1NTY1OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1bb287e5d199f0e',t:'MTc4NDE0MzU3OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
