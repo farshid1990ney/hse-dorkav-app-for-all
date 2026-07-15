@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>صفحه پیدا نشد | سامانه ایمنی آژند همت توس</title>
+
+    <style>
+        :root {
+            --primary: #ff6208;
+            --primary-hover: #e05300;
+            --dark-blue: #1e3c5c;
+            --bg-gradient: linear-gradient(145deg, #eef2f7 0%, #dfe7f0 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --text-main: #1e2a2e;
+            --text-muted: #64748b;
+            --border-radius-lg: 24px;
+            --border-radius-sm: 12px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        body {
+            background: var(--bg-gradient);
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            line-height: 1.8;
+        }
+        .main-container {
+            max-width: 460px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .header {
+            background: var(--dark-blue);
+            padding: 30px 20px;
+            color: white;
+            border-bottom: 4px solid var(--primary);
+        }
+        .header .emoji { font-size: 3rem; display: block; margin-bottom: 10px; }
+        .header h1 { font-size: 1.3rem; margin-bottom: 4px; }
+        .header p { opacity: 0.8; font-size: 0.85rem; }
+        .content { padding: 30px 25px; }
+        .content p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+        .btn-back {
+            background: var(--primary);
+            border: none;
+            padding: 14px 28px;
+            border-radius: var(--border-radius-sm);
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            text-decoration: none;
+            width: 100%;
+            justify-content: center;
+        }
+        .btn-back:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        .btn-home {
+            background: #cbd5e1;
+            color: #334155;
+            margin-top: 12px;
+        }
+        .btn-home:hover { background: #b0bec5; }
+        .footer {
+            background: rgba(0, 0, 0, 0.02);
+            padding: 14px 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .footer .highlight { color: var(--primary); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="header">
+            <span class="emoji">🔍</span>
+            <h1>این صفحه پیدا نشد</h1>
+            <p>سامانه ایمنی آژند همت توس</p>
+        </div>
+        <div class="content">
+            <p>متأسفانه صفحه‌ای که به دنبال آن بودید در دسترس نیست.<br>لطفاً دکمه‌ی زیر را بزنید و به مرحله‌ی قبل برگردید.</p>
+            <a href="#" class="btn-back" id="goBackBtn">↩️ بازگشت به مرحله قبل</a>
+            <a href="index.html" class="btn-back btn-home">🏠 بازگشت به صفحه اصلی</a>
+        </div>
+        <div class="footer">
+            تهیه شده توسط <span class="highlight">مهندس فرشید نگهداری</span> و <span class="highlight">مهندس حسین زارعی</span><br>
+            <span style="direction:ltr; display:inline-block;">📞 09178680173</span>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('goBackBtn').addEventListener('click', function (e) {
+            e.preventDefault();
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+
+    <script src="hse-common.js"></script>
+
+</body>
+</html>

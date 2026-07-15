@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>آموزش جامع ایمنی داربست - آژند همت توس</title>
+
+    <style>
+        :root {
+            --primary: #ff6208;
+            --primary-hover: #e05300;
+            --secondary: #f39c12;
+            --success: #27ae60;
+            --safety: #2c6e4e;
+            --danger: #c0392b;
+            --dark-blue: #1e3c5c;
+            --bg-gradient: linear-gradient(145deg, #eef2f7 0%, #dfe7f0 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --text-main: #1e2a2e;
+            --text-muted: #64748b;
+            --border-radius-lg: 24px;
+            --border-radius-md: 16px;
+            --border-radius-sm: 12px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            color: var(--text-main);
+            line-height: 1.8;
+        }
+
+        .main-container {
+            max-width: 1000px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header {
+            background: var(--dark-blue);
+            padding: 35px 20px;
+            color: white;
+            text-align: center;
+            border-bottom: 4px solid var(--primary);
+            position: relative;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        .header h1 .icon {
+            margin-left: 10px;
+        }
+        .header p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        .header .back-home {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .header .back-home:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .content {
+            padding: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-md);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+        .card:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        }
+        .card-title {
+            color: var(--dark-blue);
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-right: 4px solid var(--primary);
+            padding-right: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-title .icon {
+            font-size: 1.5rem;
+        }
+        .card-subtitle {
+            color: var(--primary);
+            font-size: 1.05rem;
+            font-weight: bold;
+            margin: 18px 0 10px 0;
+            border-bottom: 2px solid rgba(255, 98, 8, 0.15);
+            padding-bottom: 6px;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .tips-grid .tip-item {
+            background: rgba(0, 0, 0, 0.02);
+            padding: 10px 14px;
+            border-radius: var(--border-radius-sm);
+            border-right: 3px solid var(--safety);
+            font-size: 0.9rem;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .tips-grid .tip-item:hover {
+            background: rgba(44, 110, 78, 0.04);
+            transform: translateX(-3px);
+        }
+        .tips-grid .tip-item.danger-tip {
+            border-right-color: var(--danger);
+        }
+        .tips-grid .tip-item.warning-tip {
+            border-right-color: var(--secondary);
+        }
+        .tips-grid .tip-item.primary-tip {
+            border-right-color: var(--primary);
+        }
+        .tips-grid .tip-item.info-tip {
+            border-right-color: #3498db;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .spec-table th,
+        .spec-table td {
+            padding: 10px 12px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+        .spec-table th {
+            background: var(--dark-blue);
+            color: white;
+            font-weight: bold;
+        }
+        .spec-table tr:nth-child(even) {
+            background: rgba(0, 0, 0, 0.02);
+        }
+        .spec-table tr:hover {
+            background: rgba(255, 98, 8, 0.04);
+        }
+        .spec-table .highlight-row {
+            background: rgba(255, 98, 8, 0.06);
+            font-weight: bold;
+        }
+
+        .btn-back {
+            background: #cbd5e1;
+            border: none;
+            padding: 10px 24px;
+            border-radius: var(--border-radius-sm);
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 12px;
+            color: #334155;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .btn-back:hover {
+            background: #b0bec5;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            background: rgba(0, 0, 0, 0.02);
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .footer .highlight {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .badge-standard {
+            display: inline-block;
+            background: var(--safety);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-right: 5px;
+        }
+        .badge-danger {
+            display: inline-block;
+            background: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-right: 5px;
+        }
+        .badge-warning {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-right: 5px;
+        }
+        .badge-info {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 20px;
+            margin-right: 5px;
+        }
+
+        .safety-alert {
+            background: rgba(192, 57, 43, 0.04);
+            border-right: 4px solid var(--danger);
+            padding: 15px;
+            border-radius: var(--border-radius-sm);
+            margin: 10px 0;
+        }
+        .safety-alert strong {
+            color: var(--danger);
+        }
+        .safety-alert ul {
+            padding-right: 20px;
+            margin-top: 5px;
+        }
+        .safety-alert ul li {
+            margin-bottom: 4px;
+            font-size: 0.9rem;
+        }
+
+        .definition-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .definition-item {
+            background: rgba(0, 0, 0, 0.02);
+            padding: 10px 14px;
+            border-radius: var(--border-radius-sm);
+            border-right: 3px solid var(--secondary);
+            transition: var(--transition);
+        }
+        .definition-item:hover {
+            background: rgba(255, 98, 8, 0.04);
+        }
+        .definition-item strong {
+            color: var(--dark-blue);
+            display: block;
+            font-size: 0.92rem;
+        }
+        .definition-item span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 2px;
+        }
+
+        @media(max-width:700px) {
+            .content {
+                padding: 15px;
+            }
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            .header .back-home {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+                left: 10px;
+            }
+            .definition-grid {
+                grid-template-columns: 1fr;
+            }
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+            .spec-table {
+                font-size: 0.75rem;
+            }
+            .spec-table th,
+            .spec-table td {
+                padding: 6px 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+
+        <!-- HEADER -->
+        <div class="header">
+            <a href="index.html" class="back-home" title="بازگشت به صفحه اصلی">🏠</a>
+            <h1><span class="icon">🪜</span> آموزش جامع ایمنی داربست</h1>
+            <p>راهنمای کامل برپایی، بازرسی و استفاده ایمن از داربست‌ها بر اساس استاندارد BS 5973</p>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+
+            <!-- ===== 1- هدف و دامنه ===== -->
+            <div class="card">
+                <div class="card-title"><span class="icon">📖</span> 1- هدف و دامنه فعالیت</div>
+                <p style="margin-bottom:8px;">
+                    <strong>هدف:</strong> تعیین استانداردهایی برای برپایی داربست‌های ایمن، استفاده صحیح از آنها، 
+                    ایجاد پارامترهای بازرسی و شناسایی الزامات هماهنگ‌سازی برای به حداقل رساندن خطرات.
+                </p>
+                <p>
+                    <strong>دامنه فعالیت:</strong> این دستورالعمل برای <strong>همه داربست‌هایی</strong> که در پروژه‌های شرکت آژند همت توس برپا می‌شوند، کاربرد دارد.
+                </p>
+                <div style="margin-top:10px; padding:10px; background:rgba(44,110,78,0.04); border-radius:var(--border-radius-sm); border-right:3px solid var(--safety);">
+                    <strong>📌 منابع معتبر:</strong>
+                    <span class="badge-standard">BS 5973</span>
+                    <span class="badge-standard">BS 1139</span>
+                    <span class="badge-standard">BS 2482</span>
+                    <span class="badge-standard">BS 1129</span>
+                    <span class="badge-standard">BS 5973 1981</span>
+                </div>
+            </div>
+
+            <!-- ===== 2- تعاریف کامل ===== -->
+            <div class="card">
+                <div class="card-title"><span class="icon">📚</span> 2- تعاریف و اصطلاحات کامل</div>
+                <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:12px;">تمام اجزاء و اصطلاحات مورد استفاده در داربست‌بندی بر اساس استانداردهای بین‌المللی</p>
+
+                <div class="definition-grid">
+                    <div class="definition-item">
+                        <strong>🪜 داربست (Scaffold)</strong>
+                        <span>ساختار موقتی که دسترسی ایمن به محیط‌های کاری فراهم می‌کند و برای نگهداری مواد، دستگاه‌ها یا تجهیزات استفاده می‌شود.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>🔗 بست (Coupler)</strong>
+                        <span>وسیله‌ای برای اتصال دو لوله به یکدیگر. دو نوع است: <strong>حامل بار (Load Bearing)</strong> و <strong>غیر حامل بار (Non-Load Bearing)</strong></span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>🛡️ شخص کارآمد (Competent Person)</strong>
+                        <span>فردی با دانش تئوری و عملی کافی که توانایی شناسایی خطاها، عیوب و نقص‌های داربست را داشته باشد.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>📏 فاصله بین دو پایه (Bay Length)</strong>
+                        <span>فاصله بین دو استاندارد مجاور در طول داربست.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>🪵 تخته داربست (Scaffold Board)</strong>
+                        <span>چوب نرم تأییدشده طبق BS 2482 برای ایجاد سکوهای دسترسی و کاری. باید کندسوز باشد.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>🛡️ نرده محافظ (Guard Rail)</strong>
+                        <span>لوله‌ای که در داخل داربست در ارتفاع ۱ متری برای جلوگیری از سقوط افراد نصب می‌شود.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>⬆️ لجر (Ledger)</strong>
+                        <span>لوله افقی که به استانداردها متصل شده و از خم شدن آنها جلوگیری می‌کند. به عنوان تکیه‌گاه ترانزوم‌ها عمل می‌کند.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>⬆️ ترانزوم (Transom)</strong>
+                        <span>دستک افقی که سکوهای کاری را نگهداری می‌کند. بین لجرها قرار می‌گیرد.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>⬆️ استاندارد (Standard)</strong>
+                        <span>لوله عمودی اصلی که بار را به پایه‌ها و زمین منتقل می‌کند.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>🏗️ بیس پلیت (Base Plate)</strong>
+                        <span>صفحه فلزی زیر استاندارد که بار را توزیع می‌کند.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>🪵 سول پلیت (Sole Plate)</strong>
+                        <span>تخته چوبی زیر بیس پلیت در زمین‌های نرم برای توزیع بار.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>📐 مهاربندی (Bracing)</strong>
+                        <span>لوله‌های اریب که به صورت ضربدری برای محکم‌کردن داربست نصب می‌شوند.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>⬆️ پانچون (Puncheon)</strong>
+                        <span>لوله عمودی که در پایین‌ترین انتها به لوله افقی متصل شده و بار را مستقیماً به زمین منتقل نمی‌کند.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>🔀 ریکر (Raker)</strong>
+                        <span>لوله اریب که برای تقویت داربست استفاده می‌شود.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>🧱 باترس (Buttress)</strong>
+                        <span>ساختار لوله‌ای که در مقابل داربست برای تقویت آن قرار می‌گیرد.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>🔄 کاستور (Castor)</strong>
+                        <span>چرخ با قفل که به پایه استاندارد متصل شده و برای حرکت داربست استفاده می‌شود.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>📏 لفت (Lift)</strong>
+                        <span>طبقه یا سطح کاری داربست که شامل لجرها، ترانزوم‌ها و تخته‌ها می‌باشد.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>📍 نود پوینت (Node Point)</strong>
+                        <span>محل اتصال ترانزوم، لجر و استانداردها به یکدیگر.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>🪵 تویی برد (Toe Board)</strong>
+                        <span>قرنیز یا صفحه محافظ در لبه سکو برای جلوگیری از سقوط اشیا.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>🔗 گیره نگهدارنده قرنیز (Toe Board Clip)</strong>
+                        <span>گیره‌ای که قرنیز را به لوله داربست متصل می‌کند.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>⛓️ هوپ آیرن (Hoop Iron)</strong>
+                        <span>تسمه فلزی در دو انتهای تخته برای جلوگیری از شکاف‌برداشتن.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>🪜 نیدل ترانزوم (Needle Transom)</strong>
+                        <span>ترانزومی که از داربست بیرون زده است.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>📐 تیر اتصال (Tie)</strong>
+                        <span>لوله‌ای که داربست را به ساختمان یا سازه مجاور متصل می‌کند.</span>
+                    </div>
+                    <div class="definition-item">
+                        <strong>🪜 نردبان (Ladder)</strong>
+                        <span>وسیله دسترسی عمودی با پله‌های ثابت که باید طبق BS 1129 ساخته شود.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== 3- بست‌ها ===== -->
+            <div class="card">
+                <div class="card-title"><span class="icon">🔗</span> 3- بست‌ها (Couplers)</div>
+
+                <div class="table-container">
+                    <table class="spec-table">
+                        <thead>
+                            <tr>
+                                <th>نوع بست</th>
+                                <th>کاربرد</th>
+                                <th>نکات ایمنی</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>بست راست‌گوشه (Right-angle Coupler)</strong></td>
+                                <td>اتصال دو لوله عمود بر هم (استاندارد به لجر)</td>
+                                <td>بست حامل بار — باید محکم بسته شود</td>
+                            </tr>
+                            <tr>
+                                <td><strong>بست خوابیده (Swivel Coupler)</strong></td>
+                                <td>اتصال دو لوله در هر زاویه (مهاربندی)</td>
+                                <td>برای مهاربندی اریب استفاده می‌شود</td>
+                            </tr>
+                            <tr>
+                                <td><strong>بست خطی (Sleeve Coupler)</strong></td>
+                                <td>اتصال دو لوله هم‌جهت (افزایش طول)</td>
+                                <td>غیرحامل بار — فقط برای افزایش طول</td>
+                            </tr>
+                            <tr>
+                                <td><strong>بست گیره‌ای (Putlog Coupler)</strong></td>
+                                <td>اتصال ترانزوم به لجر</td>
+                                <td>بست حامل بار</td>
+                            </tr>
+                            <tr>
+                                <td><strong>بست تیر اتصال (Tie Coupler)</strong></td>
+                                <td>اتصال داربست به ساختمان</td>
+                                <td>برای نقاط مهار استفاده می‌شود</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="safety-alert" style="margin-top:10px;">
+                    <strong>⚠️ نکات مهم در مورد بست‌ها:</strong>
+                    <ul>
+                        <li>بست‌های حامل بار باید با آچار کالیبره شده به <strong>گشتاور ۵۰ تا ۶۰ نیوتن‌متر</strong> بسته شوند.</li>
+                        <li>بست‌های شکسته، زنگ‌زده یا تغییرشکل‌یافته <strong>نباید</strong> استفاده شوند.</li>
+                        <li>بست‌ها باید بر اساس نوع دسته‌بندی و انبار شوند.</li>
+                        <li>از بست‌های غیرحامل بار برای اتصالات باربر استفاده نشود.</li>
+                        <li>بست‌های راست‌گوشه نباید بیش از حد سفت شوند (تغییرشکل شیارهای داخلی).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ===== 4- انبار لوازم ===== -->
+            <div class="card">
+                <div class="card-title"><span class="icon">📦</span> 4- انبار لوازم و تجهیزات</div>
+                <div class="tips-grid">
+                    <div class="tip-item primary-tip">📦 تمام تجهیزات داربست در <strong>قفسه‌های مناسب</strong> و تمیز انبار شوند.</div>
+                    <div class="tip-item primary-tip">📏 لوله‌ها بر اساس <strong>طول</strong> دسته‌بندی شوند.</div>
+                    <div class="tip-item primary-tip">🔗 بست‌ها و اتصالات بر اساس <strong>نوع</strong> دسته‌بندی شوند.</div>
+                    <div class="tip-item warning-tip">📦 تخته‌ها بیش از <strong>۲۰ عدد</strong> روی هم انبار نشوند.</div>
+                    <div class="tip-item warning-tip">📍 لوازم در مکان‌های مشخص‌شده توسط مدیریت سایت انبار شوند.</div>
+                    <div class="tip-item danger-tip">🚫 انبار کردن در مسیرهای دسترسی یا خطر لغزش ممنوع است.</div>
+                    <div class="tip-item info-tip">🔧 بست‌ها با مقدار کمی روغن نگهداری شوند تا از زنگ‌زدگی جلوگیری شود.</div>
+                    <div class="tip-item danger-tip">🚫 لوازم آسیب‌دیده یا فاقد مشخصات باید <strong>دور انداخته شوند</strong>.</div>
+                </div>
+            </div>
+
+            <!-- ===== 5- مقررات عمومی ===== -->
+            <div class="card">
+                <div class="card-title"><span class="icon">📋</span> 5- مقررات عمومی داربست</div>
+
+                <div class="tips-grid">
+                    <div class="tip-item primary-tip">✅ کلیه داربست‌ها توسط <strong>پرسنل کارآمد</strong> نصب، اصلاح و پیاده شوند.</div>
+                    <div class="tip-item primary-tip">✅ داربست‌بندان به ۳ گروه تقسیم می‌شوند: <strong>کارآموز، ماهر، سرکارگر</strong></div>
+                    <div class="tip-item warning-tip">📋 سیستم <strong>دفتر ثبت روزانه</strong> برای ثبت اطلاعات داربست برقرار شود.</div>
+                    <div class="tip-item warning-tip">📋 <strong>نقشه داربست</strong> شامل موقعیت، کد شناسایی و نوع داربست نگهداری شود.</div>
+                    <div class="tip-item">✅ داربست باید هفته‌ای یکبار توسط سوپروایزر بازرسی شود.</div>
+                    <div class="tip-item">✅ نتیجه بازرسی در <strong>فرم بازرسی</strong> ثبت گردد.</div>
+                    <div class="tip-item danger-tip">🚫 هیچ داربستی نباید نیمه‌کاره رها شود مگر با علائم کافی.</div>
+                    <div class="tip-item danger-tip">🚫 تغییرات فقط توسط داربست‌بندهای مجاز انجام شود.</div>
+                    <div class="tip-item danger-tip">🚫 داربست فقط برای هدفی که ساخته شده استفاده شود.</div>
+                    <div class="tip-item danger-tip">🚫 استفاده از اجزاء آسیب‌دیده یا زنگ‌زده ممنوع است.</div>
+                    <div class="tip-item info-tip">📌 در هنگام انتقال مسئولیت، <strong>تگ جدید Scafftag</strong> صادر شود.</div>
+                    <div class="tip-item info-tip">📌 قبل از هر بار استفاده، داربست توسط <strong>شخص کارآمد</strong> بازرسی شود.</div>
+                </div>
+
+                <div class="safety-alert" style="margin-top:10px;">
+                    <strong>🚫 ممنوعیت‌های مهم:</strong>
+                    <ul>
+                        <li>هیچ داربستی نباید نیمه‌کاره رها شود مگر اینکه علائم کافی نصب شده باشد.</li>
+                        <li>تغییرات در داربست فقط توسط داربست‌بندهای مجاز انجام شود.</li>
+                        <li>داربست فقط برای هدفی که ساخته شده است مورد استفاده قرار گیرد.</li>
+                        <li>استفاده از اجزاء آسیب‌دیده، زنگ‌زده یا بدون ویژگی‌های مطلوب ممنوع است.</li>
+                        <li>کارگران زیر ساختار داربست باید با نرده‌های محافظ، جان‌پناه و قرنیز محافظت شوند.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ===== 6- فونداسیون ===== -->
+            <div class="card">
+                <div class="card-title"><span class="icon">🏗️</span> 6- فونداسیون و پایه‌ها</div>
+
+                <div class="table-container">
+                    <table class="spec-table">
+                        <thead>
+                            <tr>
+                                <th>نوع زمین</th>
+                                <th>ابعاد سول پلیت (Sole Plate)</th>
+                                <th>حداقل مساحت</th>
+                                <th>توضیحات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>زمین سخت (بتن، فولاد)</td>
+                                <td>۵۰۰ × ۲۲۵ × ۳۵ میلی‌متر</td>
+                                <td>—</td>
+                                <td>مستقیماً روی سطح با Base Plate</td>
+                            </tr>
+                            <tr>
+                                <td>زمین نرم یا دست‌خورده</td>
+                                <td>۷۶۵ × ۲۲۵ × ۳۵ میلی‌متر</td>
+                                <td>۱۷۰۰ cm²</td>
+                                <td>نیاز به توزیع بار بیشتر</td>
+                            </tr>
+                            <tr class="highlight-row">
+                                <td>دو پایه مجاور (زمین نرم)</td>
+                                <td>۱۰۵۵ × ۲۲۵ × ۳۵ میلی‌متر</td>
+                                <td>۳۴۰۰ cm²</td>
+                                <td>برای دو پایه هم‌سطح</td>
+                            </tr>
+                            <tr>
+                                <td>زمین شیب‌دار (&gt;10:1)</td>
+                                <td>بررسی توسط ناظر</td>
+                                <td>—</td>
+                                <td>نیاز به پله‌های شیب‌شکن</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tips-grid" style="margin-top:10px;">
+                    <div class="tip-item">🔹 از <strong>Base Plate</strong> برای هر پایه داربست استفاده شود.</div>
+                    <div class="tip-item">🔹 <strong>Sole Plate</strong> در زمین‌های غیر از بتن یا فلز استفاده شود.</div>
+                    <div class="tip-item danger-tip">🚫 استفاده از آجر، بلوک حرارتی یا قراضه چوب ممنوع است.</div>
+                    <div class="tip-item">🔹 پایه‌های داربست باید به طور <strong>عمودی</strong> کار گذاشته شوند.</div>
+                    <div class="tip-item warning-tip">⚠️ در زمین شیبدار، پله‌های شیب‌شکن ایجاد شوند.</div>
+                    <div class="tip-item">🔹 اتصالات پایه‌ها باید <strong>یک در میان</strong> باشند.</div>
+                    <div class="tip-item danger-tip">🚫 حفاری در مجاورت داربست (۱ متری بتن، ۲ متری خاک) ممنوع.</div>
+                    <div class="tip-item">🔹 Base Plate در دو طرف پایه مجاور به اندازه <strong>۶۰۰ میلی‌متر</strong> گسترش یابد.</div>
+                    <div class="tip-item info-tip">📏 فاصله بین پایه‌ها طبق جدول بخش ۱۳ تعیین می‌شود.</div>
+                </div>
+            </div>
+
+            <!-- ===== 7- لجر و ترانزوم ===== -->
+            <div class="card">
+                <div class="card-title"><span class="icon">⬆️</span> 7- لجر (Ledger) و ترانزوم (Transom)</div>
+
+                <div class="table-container">
+                    <table class="spec-table">
+                        <thead>
+                            <tr>
+                                <th>جزء</th>
+                                <th>حداکثر فاصله (مرکز به مرکز)</th>
+                                <th>نکات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>لجر (Ledger)</strong></td>
+                                <td>۲ متر</td>
+                                <td>با بست‌های حامل بار به استانداردها متصل شوند</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ترانزوم (Transom)</strong></td>
+                                <td>۱.۲ متر</td>
+                                <td>برای سکوهای کاری ۵ تخته‌ای</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ترانزوم میانی (Intermediate)</strong></td>
+                                <td>۱.۵ متر</td>
+                                <td>برای تقویت سکوهای کاری</td>
+                            </tr>
+                            <tr>
+                                <td><strong>فاصله لجر از استاندارد</strong></td>
+                                <td>حداکثر ۲ متر</td>
+                                <td>برای جلوگیری از خمیدگی</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tips-grid" style="margin-top:10px;">
+                    <div class="tip-item primary-tip">🔹 لجرها با <strong>بست‌های حامل بار</strong> به استانداردها متصل شوند.</div>
+                    <div class="tip-item primary-tip">🔹 ترانزوم‌ها با بست‌های ثابت به پایه‌ها محکم شوند.</div>
+                    <div class="tip-item warning-tip">📏 فاصله لجرها حداکثر <strong>۲ متر</strong>.</div>
+                    <div class="tip-item warning-tip">📏 فاصله ترانزوم‌ها حداکثر <strong>۱.۲ متر</strong>.</div>
+                    <div class="tip-item danger-tip">🚫 اتصالات نباید در یک سطح یکسان در پایه‌های مجاور ایجاد شوند.</div>
+                    <div class="tip-item">✅ ترانزوم‌ها می‌توانند بر روی لجرها قرار گرفته و با گیره‌های مهار ایمن شوند.</div>
+                    <div class="tip-item info-tip">📌 در هر نود پوینت (محل اتصال) حداقل یک بست حامل بار استفاده شود.</div>
+                </div>
+            </div>
+
+            <!-- ===== 8- تیرهای متصل (Ties) ===== -->
+            <div class="card">
+                <div class="card-title"><span class="icon">🔗</span> 8- تیرهای متصل (Ties)</div>
+
+                <div class="table-container">
+                    <table class="spec-table">
+                        <thead>
+                            <tr>
+                                <th>نوع تیر اتصال</th>
+                                <th>حداکثر فاصله</th>
+                                <th>توضیحات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>تیر اتصال مستقیم (Direct Tie)</strong></td>
+                                <td>۴ متر</td>
+                                <td>اتصال مستقیم به ساختمان</td>
+                            </tr>
+                            <tr>
+                                <td><strong>تیر اتصال غیرمستقیم (Indirect Tie)</strong></td>
+                                <td>۶ متر</td>
+                                <td>از طریق لوله‌های واسطه</td>
+                            </tr>
+                            <tr>
+                                <td><strong>تیر اتصال مهاربندی (Brace Tie)</strong></td>
+                                <td>۸ متر</td>
+                                <td>با استفاده از مهاربندی</td>
+                            </tr>
+                            <tr>
+                                <td><strong>نقطه مهار (Tie Point)</strong></td>
+                                <td>هر ۴ متر در ارتفاع</td>
+                                <td>در هر طبقه</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="safety-alert" style="margin-top:10px;">
+                    <strong>⚠️ نکات مهم تیرهای متصل:</strong>
+                    <ul>
+                        <li>نقطه مهار باید استحکام کافی برای مقاومت در برابر بار داشته باشد.</li>
+                        <li>تحت هیچ شرایطی از <strong>نرده‌های محافظ</strong> به عنوان نقطه مهار استفاده نشود.</li>
+                        <li>در داربست‌های کوچک (کمتر از ۳ طبقه)، پایداری با <strong>تیرهای اریب</strong> حفظ شود.</li>
+                        <li>تیرهای اریب توسط بست‌های ثابت به لجر طبقه دوم محکم شوند.</li>
+                        <li>تیرهای اریب نباید بدون اتصالات مهاری بیش از ۳ متر باشند.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ===== 9- مهاربندی ===== -->
+            <div class="card">
+                <div class="card-title"><span class="icon">📐</span> 9- مهاربندی (Bracing)</div>
+
+                <div class="table-container">
+                    <table class="spec-table">
+                        <thead>
+                            <tr>
+                                <th>نوع مهاربندی</th>
+                                <th>حداکثر فاصله</th>
+                                <th>توضیحات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>مهار نمای (Face Brace)</strong></td>
+                                <td>۱۰ متر</td>
+                                <td>در هر دو جهت نما</td>
+                            </tr>
+                            <tr>
+                                <td><strong>مهار لجر به لجر (Ledger Brace)</strong></td>
+                                <td>یک در میان</td>
+                                <td>بین پایه‌ها تکرار شود</td>
+                            </tr>
+                            <tr>
+                                <td><strong>مهار Plan</strong></td>
+                                <td>یک در میان در طبقات</td>
+                                <td>طبقه پایین و بالا همیشه مهار شوند</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tips-grid" style="margin-top:10px;">
+                    <div class="tip-item primary-tip">✅ تمام داربست‌ها در <strong>هر دو جهت</strong> مهاربندی شوند.</div>
+                    <div class="tip-item primary-tip">✅ مهارهای نمای داربست در حداکثر فاصله <strong>۱۰ متری</strong> تکرار شوند.</div>
+                    <div class="tip-item primary-tip">✅ مهاربندی لجر به لجر به صورت <strong>یک در میان</strong> بین پایه‌ها تکرار گردد.</div>
+                    <div class="tip-item danger-tip">🚫 اتصالات در مهاربندی نمایی با <strong>رابط (مغزی)</strong> ایجاد شوند (پین‌ها مجاز نیستند).</div>
+                    <div class="tip-item danger-tip">🚫 اتصالات پیوندی برای مهاربندی استفاده نشوند.</div>
+                    <div class="tip-item info-tip">📌 جایی که مهارها به ترانزوم‌ها اتصال یافته‌اند، ترانزوم با بست ثابت محکم شود.</div>
+                </div>
+            </div>
+
+            <!-- ===== 10- سکوی کار ===== -->
+            <div class="card">
+                <div class="card-title"><span class="icon">🪵</span> 10- سکوهای کاری (Working Platforms)</div>
+
+                <div class="table-container">
+                    <table class="spec-table">
+                        <thead>
+                            <tr>
+                                <th>نوع سکو</th>
+                                <th>تعداد تخته</th>
+                                <th>عرض (mm)</th>
+                                <th>کاربرد</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>سکوی استاندارد</strong></td>
+                                <td>۵ تخته</td>
+                                <td>۴۳۲</td>
+                                <td>سکوی کاری عمومی</td>
+                            </tr>
+                            <tr>
+                                <td><strong>سکوی بازرسی</strong></td>
+                                <td>۲ تخته</td>
+                                <td>۱۷۳</td>
+                                <td>فقط برای بازرسی و دسترسی</td>
+                            </tr>
+                            <tr>
+                                <td><strong>سکوی دسترسی نردبان</strong></td>
+                                <td>۲ تخته</td>
+                                <td>۱۷۳</td>
+                                <td>محل ورودی نردبان</td>
+                            </tr>
+                            <tr>
+                                <td><strong>سکوی ۶ تخته</strong></td>
+                                <td>۶ تخته</td>
+                                <td>۶۳۵</td>
+                                <td>برای عبور و مرور بیشتر</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tips-grid" style="margin-top:10px;">
+                    <div class="tip-item primary-tip">✅ سکوهای کاری باید به صورت <strong>تخته‌فرش پیوسته</strong> باشند.</div>
+                    <div class="tip-item primary-tip">✅ نرده محافظ در ارتفاع <strong>۱ متری</strong> از سکو نصب شود.</div>
+                    <div class="tip-item primary-tip">✅ نرده محافظ میانی در <strong>ارتفاع ۵۰۰ میلی‌متر</strong> از سکو.</div>
+                    <div class="tip-item primary-tip">✅ قرنیزها حداقل ارتفاع <strong>۱۵۰ میلی‌متر</strong> در تمام سکوها.</div>
+                    <div class="tip-item warning-tip">📏 حداکثر فاصله بین بالای قرنیز تا نرده: <strong>۶۹۰ میلی‌متر</strong>.</div>
+                    <div class="tip-item warning-tip">📏 حداکثر دهانه هر تخته: <strong>۱.۲ متر</strong>.</div>
+                    <div class="tip-item info-tip">📌 تخته‌ها برای عبور از کنار لوله‌ها بریده می‌شوند.</div>
+                    <div class="tip-item info-tip">📌 هر تخته باید با <strong>تسمه یا سیم</strong> بسته شود.</div>
+                    <div class="tip-item danger-tip">🚫 اگر مواد باالی قرنیز انباشته می‌شوند، <strong>حفاظ آجری</strong> نصب شود.</div>
+                    <div class="tip-item danger-tip">🚫 فضای دسترسی نردبان نباید بیش از <strong>۵۰۰ میلی‌متر</strong> (۲ تخته) باشد.</div>
+                </div>
+
+                <div class="safety-alert" style="margin-top:10px;">
+                    <strong>📏 ابعاد دقیق نرده و قرنیز:</strong>
+                    <ul>
+                        <li>ارتفاع نرده محافظ از سطح سکو: <strong>۱ متر</strong></li>
+                        <li>ارتفاع نرده میانی از سطح سکو: <strong>۵۰۰ میلی‌متر</strong></li>
+                        <li>ارتفاع قرنیز: <strong>۱۵۰ میلی‌متر</strong></li>
+                        <li>فاصله بین بالای قرنیز تا زیر نرده: حداکثر <strong>۶۹۰ میلی‌متر</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ===== 11- نردبان‌ها ===== -->
+            <div class="card">
+                <div class="card-title"><span class="icon">🪜</span> 11- نردبان‌ها (Ladders)</div>
+
+                <div class="table-container">
+                    <table class="spec-table">
+                        <thead>
+                            <tr>
+                                <th>مشخصه</th>
+                                <th>مقدار</th>
+                                <th>توضیحات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>فاصله از سکو</strong></td>
+                                <td>حداقل ۱.۰۵ متر</td>
+                                <td>فاصله انتهای نردبان تا سکو</td>
+                            </tr>
+                            <tr>
+                                <td><strong>زاویه نصب</strong></td>
+                                <td>۷۵ درجه</td>
+                                <td>به ازای هر ۱.۲ متر ارتفاع، ۳۰۰ میلی‌متر عقب‌روی</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ارتفاع نردبان</strong></td>
+                                <td>حداکثر ۹ متر</td>
+                                <td>برای سکوهای دسترسی</td>
+                            </tr>
+                            <tr>
+                                <td><strong>جنس</strong></td>
+                                <td>آلومینیوم یا چوب</td>
+                                <td>نردبان دست‌ساز ممنوع</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tips-grid" style="margin-top:10px;">
+                    <div class="tip-item primary-tip">✅ نردبان‌ها در <strong>زمین مناسب</strong> قرار گیرند.</div>
+                    <div class="tip-item primary-tip">✅ نردبان در <strong>انتها و قسمت فوقانی</strong> با گیره یا تسمه محکم شود.</div>
+                    <div class="tip-item primary-tip">✅ نردبان‌های بلند در <strong>نقطه میانی</strong> ساپورت و با تسمه بسته شوند.</div>
+                    <div class="tip-item warning-tip">📏 زاویه نصب: <strong>۷۵ درجه</strong> (۱ به ۴)</div>
+                    <div class="tip-item warning-tip">📏 ارتفاع عمودی سکوهای دسترسی نردبان: حداکثر <strong>۹ متر</strong></div>
+                    <div class="tip-item danger-tip">🚫 نردبان‌های آسیب‌دیده یا فرسوده استفاده نشوند.</div>
+                    <div class="tip-item danger-tip">🚫 نردبان‌های دست‌ساز <strong>ممنوع</strong> است.</div>
+                    <div class="tip-item info-tip">✅ میله‌های مهار فلزی در جایگاه مناسب کار گذاشته شوند.</div>
+                    <div class="tip-item info-tip">✅ نردبان‌ها باید از نظر آسیب‌دیدگی توسط ناظر تأیید شوند.</div>
+                </div>
+            </div>
+
+            <!-- ===== 12- انواع داربست ===== -->
+            <div class="card">
+                <div class="card-title"><span class="icon">🏗️</span> 12- انواع داربست</div>
+
+                <div class="table-container">
+                    <table class="spec-table">
+                        <thead>
+                            <tr>
+                                <th>نوع داربست</th>
+                                <th>کاربرد</th>
+                                <th>شرایط و محدودیت‌ها</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>داربست مستقل (Independent Tied)</strong></td>
+                                <td>کارهای عمومی ساختمانی</td>
+                                <td>ارتفاع حداکثر <strong>۴۵ متر</strong> بدون محاسبات مهندسی</td>
+                            </tr>
+                            <tr>
+                                <td><strong>داربست قفسی (Birdcage)</strong></td>
+                                <td>کار در فضاهای بزرگ (سقف‌ها)</td>
+                                <td>استانداردها در فواصل <strong>۲.۵ متر</strong>. ارتفاع طبقات <strong>۲.۵ متر</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>برج متحرک (Mobile Tower)</strong></td>
+                                <td>کار در ارتفاعات با جابجایی</td>
+                                <td>ارتفاع ≤ ۳ برابر حداقل پایه. چرخ‌ها با <strong>ترمز</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>برج ثابت (Fixed Tower)</strong></td>
+                                <td>کار در ارتفاعات بدون جابجایی</td>
+                                <td>ارتفاع ≤ ۳ برابر حداقل پایه</td>
+                            </tr>
+                            <tr>
+                                <td><strong>داربست بازویی (Cantilever)</strong></td>
+                                <td>دسترسی به نقاط دور از دسترس</td>
+                                <td>نیاز به <strong>محاسبات مهندسی</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>داربست آویزان (Suspended)</strong></td>
+                                <td>کار در نمای ساختمان</td>
+                                <td>آویزها حداکثر فاصله <strong>۲.۵ متر</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>داربست سیستمی (System Scaffold)</strong></td>
+                                <td>ساختارهای پیش‌ساخته</td>
+                                <td>طبق <strong>دستورالعمل سازنده</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>داربست معلق (Hanging)</strong></td>
+                                <td>یک طبقه آویزان</td>
+                                <td>فقط یک سکو — نیاز به <strong>مهندسی</strong></td>
+                            </tr>
+                            <tr>
+                                <td><strong>داربست مستحکم با خربا (Truss-out)</strong></td>
+                                <td>کار در نقاط صعب‌العبور</td>
+                                <td>نیاز به <strong>طراحی خاص</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tips-grid" style="margin-top:10px;">
+                    <div class="tip-item info-tip"><strong>داربست مستقل:</strong> دو ردیف استاندارد موازی با مهاربندی در دو جهت.</div>
+                    <div class="tip-item info-tip"><strong>داربست قفسی:</strong> شبکه‌ای از استانداردها در فواصل منظم ۲.۵ متر.</div>
+                    <div class="tip-item warning-tip"><strong>برج متحرک:</strong> فقط در سطوح <strong>محکم و مسطح</strong> حرکت کنند.</div>
+                    <div class="tip-item danger-tip"><strong>برج متحرک:</strong> جابجایی با <strong>افراد یا بار</strong> روی آن ممنوع.</div>
+                    <div class="tip-item info-tip"><strong>داربست سیستمی:</strong> افراد باید <strong>آموزش دیده</strong> باشند.</div>
+                    <div class="tip-item danger-tip"><strong>داربست آویزان:</strong> نقاط معلق باید توسط <strong>مهندسی</strong> تأیید شود.</div>
+                    <div class="tip-item info-tip"><strong>داربست در مخازن:</strong> تست گاز، تهویه، نگهبان و روشنایی الزامی.</div>
+                    <div class="tip-item danger-tip"><strong>داربست در فضاهای محدود:</strong> رعایت <strong>همه الزامات</strong> فضاهای محدود.</div>
+                </div>
+            </div>
+
+            <!-- ===== 13- سیستم Scafftag ===== -->
+            <div class="card">
+                <div class="card-title"><span class="icon">🏷️</span> 13- سیستم Scafftag</div>
+                <p style="margin-bottom:10px;">
+                    <strong>Scafftag</strong> یک سیستم برچسب‌گذاری برای شناسایی وضعیت ایمنی داربست است.
+                </p>
+                <div class="tips-grid">
+                    <div class="tip-item" style="border-right-color:#27ae60;">🟢 <strong>تگ سبز:</strong> داربست <strong>ایمن</strong> و قابل استفاده</div>
+                    <div class="tip-item warning-tip">🟡 <strong>تگ زرد:</strong> داربست با <strong>محدودیت</strong> (فقط برای پرسنل خاص)</div>
+                    <div class="tip-item danger-tip">🔴 <strong>تگ قرمز:</strong> داربست <strong>غیرایمن</strong> — ورود ممنوع</div>
+                    <div class="tip-item primary-tip">📋 پس از بازرسی، <strong>تگ جدید</strong> صادر شود.</div>
+                    <div class="tip-item primary-tip">🔄 در هنگام انتقال مسئولیت، <strong>تگ جدید</strong> صادر شود.</div>
+                    <div class="tip-item warning-tip">📅 داربست باید <strong>هفته‌ای یکبار</strong> بازرسی و تگ شود.</div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            تهیه شده توسط <span class="highlight">مهندس فرشید نگهداری</span> و <span class="highlight">مهندس حسین زارعی</span><br>
+            <span style="direction:ltr; display:inline-block;">📞 09178680173</span>
+        </div>
+
+    </div>
+
+    <script>
+        // اضافه کردن قابلیت کپی متن با کلیک
+        document.querySelectorAll('.tip-item, .definition-item, .responsibility-card ul li, .safety-alert ul li').forEach(el => {
+            el.style.cursor = 'pointer';
+            el.addEventListener('click', function() {
+                const text = this.textContent.trim();
+                navigator.clipboard.writeText(text).then(() => {
+                    const origBg = this.style.background;
+                    this.style.background = '#d4edda';
+                    setTimeout(() => {
+                        this.style.background = origBg || '';
+                    }, 400);
+                });
+            });
+        });
+
+        console.log('✅ آموزش جامع ایمنی داربست (کامل) بارگذاری شد.');
+        console.log('📋 کلیک روی هر متن برای کپی کردن');
+        console.log('📊 شامل 13 بخش کامل: تعاریف، بست‌ها، انبار، مقررات، فونداسیون، لجر، تیرهای متصل، مهاربندی، سکوی کار، نردبان، انواع داربست، Scafftag');
+    </script>
+
+<script src="hse-common.js"></script>
+
+</body>
+</html>

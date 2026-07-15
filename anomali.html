@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>فرم گزارش عدم انطباق [v3.1]</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        :root {
+            --primary: #ff6208;
+            --primary-hover: #e05300;
+            --secondary: #f39c12;
+            --success: #27ae60;
+            --safety: #2c6e4e;
+            --danger: #c0392b;
+            --dark-blue: #1e3c5c;
+            --bg-gradient: linear-gradient(145deg, #eef2f7 0%, #dfe7f0 100%);
+            --card-bg: rgba(255, 255, 255, 0.98);
+            --text-main: #1e2a2e;
+            --text-muted: #64748b;
+            --border-radius-lg: 24px;
+            --border-radius-md: 16px;
+            --border-radius-sm: 12px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            padding: 15px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            color: var(--text-main);
+            line-height: 1.8;
+        }
+
+        .main-container {
+            max-width: 1100px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header {
+            background: var(--dark-blue);
+            padding: 35px 20px;
+            color: white;
+            text-align: center;
+            border-bottom: 4px solid var(--primary);
+            position: relative;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        .header h1 .icon {
+            margin-left: 10px;
+        }
+        .header p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        .header .back-home {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .header .back-home:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .content {
+            padding: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-md);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+        .card:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        }
+        .card-title {
+            color: var(--dark-blue);
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-right: 4px solid var(--primary);
+            padding-right: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-title .icon {
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.95rem;
+            margin-bottom: 7px;
+        }
+        label .required-star {
+            color: #dc2626;
+            font-weight: 700;
+            margin-right: 2px;
+        }
+        label .optional-badge {
+            font-weight: 400;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            background: #f1f5f9;
+            padding: 2px 12px;
+            border-radius: 30px;
+            margin-right: 8px;
+        }
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #fafcff;
+            transition: all 0.25s ease;
+            color: #1e293b;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 5px rgba(255, 98, 8, 0.08);
+        }
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .row-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .severity-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        .severity-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            border: 2.5px solid #e2e8f0;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+            background: #fafcff;
+            flex: 1;
+            min-width: 85px;
+            justify-content: center;
+            user-select: none;
+        }
+        .severity-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+        }
+        .severity-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+        }
+        .severity-low {
+            border-color: #86efac;
+        }
+        .severity-low:has(input:checked) {
+            background: #dcfce7;
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+        }
+        .severity-medium {
+            border-color: #fcd34d;
+        }
+        .severity-medium:has(input:checked) {
+            background: #fef3c7;
+            border-color: #d97706;
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+        }
+        .severity-high {
+            border-color: #fb923c;
+        }
+        .severity-high:has(input:checked) {
+            background: #ffedd5;
+            border-color: #ea580c;
+            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15);
+        }
+        .severity-critical {
+            border-color: #f87171;
+        }
+        .severity-critical:has(input:checked) {
+            background: #fee2e2;
+            border-color: #b91c1c;
+            box-shadow: 0 0 0 3px rgba(185, 28, 28, 0.15);
+        }
+
+        .file-upload-area {
+            border: 2.5px dashed #d1d9e6;
+            border-radius: 20px;
+            padding: 35px 20px 28px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fafcff;
+            position: relative;
+        }
+        .file-upload-area:hover {
+            border-color: var(--primary);
+            background: #fff6ed;
+        }
+        .file-upload-area.dragover {
+            border-color: var(--primary);
+            background: #ffefe5;
+            transform: scale(1.01);
+        }
+        .file-upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            padding: 0;
+            border: none;
+            background: transparent;
+        }
+        .file-upload-icon {
+            font-size: 3.2rem;
+            display: block;
+            margin-bottom: 4px;
+            color: #64748b;
+        }
+        .file-upload-text {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+        .file-upload-text strong {
+            color: var(--dark-blue);
+        }
+        .file-upload-text .hint {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .file-preview {
+            display: none;
+            margin-top: 18px;
+            padding: 16px 22px;
+            background: #f1f6fa;
+            border-radius: 18px;
+            border-right: 5px solid var(--primary);
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .file-preview.show {
+            display: flex;
+        }
+        .file-preview .file-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 160px;
+        }
+        .file-preview .file-info .file-icon {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        .file-preview .file-info .file-name {
+            font-weight: 600;
+            color: #1e293b;
+            word-break: break-all;
+        }
+        .file-preview .file-info .file-size {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+        .file-preview .file-remove {
+            background: #fee2e2;
+            border: none;
+            border-radius: 40px;
+            padding: 7px 20px;
+            color: #991b1b;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .file-preview .file-remove:hover {
+            background: #fecaca;
+        }
+        .file-preview .file-thumbnail {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid #e2e8f0;
+            flex-shrink: 0;
+            display: none;
+        }
+        .file-preview .file-thumbnail.show {
+            display: block;
+        }
+
+        .status-msg {
+            display: none;
+            padding: 18px 24px;
+            border-radius: 18px;
+            margin-top: 22px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            text-align: center;
+        }
+        .status-msg.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+            border: 2px solid #86efac;
+        }
+        .status-msg.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #fca5a5;
+        }
+        .status-msg.loading {
+            display: block;
+            background: #e0f2fe;
+            color: #0369a1;
+            border: 2px solid #7dd3fc;
+        }
+        .status-msg i {
+            margin-left: 10px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--dark-blue) 0%, #0b2b44 100%);
+            color: white;
+            border: none;
+            border-radius: 18px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(26, 55, 82, 0.35);
+        }
+        .btn-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .btn-submit i {
+            font-size: 1.3rem;
+        }
+
+        .note-box {
+            background: #f1f6fa;
+            padding: 18px 24px;
+            border-radius: 18px;
+            margin-top: 24px;
+            color: #475569;
+            font-size: 0.95rem;
+            border-right: 5px solid var(--primary);
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+        .note-box i {
+            font-size: 1.4rem;
+            color: var(--primary);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .note-box strong {
+            color: var(--dark-blue);
+        }
+
+        .btn-back {
+            background: #cbd5e1;
+            border: none;
+            padding: 10px 24px;
+            border-radius: var(--border-radius-sm);
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 12px;
+            color: #334155;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .btn-back:hover {
+            background: #b0bec5;
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            background: rgba(0, 0, 0, 0.02);
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .footer .highlight {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        @media (max-width: 700px) {
+            .content {
+                padding: 15px;
+            }
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            .header .back-home {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+                left: 10px;
+            }
+            .row-2col {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .severity-group {
+                flex-direction: column;
+            }
+            .severity-option {
+                justify-content: center;
+            }
+            .file-preview {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .file-preview .file-info {
+                justify-content: center;
+            }
+            .note-box {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content {
+                padding: 12px;
+            }
+            .header h1 {
+                font-size: 1.1rem;
+            }
+            input,
+            select,
+            textarea {
+                padding: 12px 14px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+
+        <!-- HEADER -->
+        <div class="header">
+            <a href="index.html?v=202606300519" class="back-home" title="بازگشت به صفحه اصلی">🏠</a>
+            <h1><span class="icon">📋</span> گزارش عدم انطباق</h1>
+            <p>فرم گزارش موارد عدم انطباق (ایمنی، کیفیت، زیست‌محیطی و ...)</p>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+
+            <div class="card">
+                <div class="card-title"><span class="icon">📝</span> فرم گزارش عدم انطباق</div>
+
+                <form id="ncrForm">
+
+                    <!-- ROW 1: NAME + POSITION -->
+                    <div class="row-2col">
+                        <div class="form-group">
+                            <label><i class="fas fa-user" style="color:var(--primary); margin-left:6px;"></i>نام و نام خانوادگی <span class="required-star">*</span></label>
+                            <input type="text" id="name" placeholder="مثال: علی محمدی" required />
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-briefcase" style="color:var(--primary); margin-left:6px;"></i>سمت / وظیفه <span class="required-star">*</span></label>
+                            <input type="text" id="position" placeholder="مثال: سرپرست شیفت" required />
+                        </div>
+                    </div>
+
+                    <!-- ROW 2: DEPARTMENT + DATE -->
+                    <div class="row-2col">
+                        <div class="form-group">
+                            <label><i class="fas fa-building" style="color:var(--primary); margin-left:6px;"></i>واحد / بخش <span class="required-star">*</span></label>
+                            <input type="text" id="department" placeholder="مثال: واحد تعمیرات" required />
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-calendar-alt" style="color:var(--primary); margin-left:6px;"></i>تاریخ مشاهده <span class="required-star">*</span></label>
+                            <input type="date" id="date" required />
+                        </div>
+                    </div>
+
+                    <!-- DESCRIPTION -->
+                    <div class="form-group">
+                        <label><i class="fas fa-pen" style="color:var(--primary); margin-left:6px;"></i>شرح کامل عدم انطباق <span class="required-star">*</span></label>
+                        <textarea id="description" placeholder="لطفاً شرح کامل و دقیق عدم انطباق را توضیح دهید..." required></textarea>
+                    </div>
+
+                    <!-- LOCATION -->
+                    <div class="form-group">
+                        <label><i class="fas fa-map-pin" style="color:var(--primary); margin-left:6px;"></i>محل وقوع (دقیق) <span class="required-star">*</span></label>
+                        <input type="text" id="location" placeholder="مثال: سالن تولید، خط شماره ۳، کنار دستگاه X" required />
+                    </div>
+
+                    <!-- SEVERITY -->
+                    <div class="form-group">
+                        <label><i class="fas fa-exclamation-triangle" style="color:var(--primary); margin-left:6px;"></i>شدت / سطح ریسک <span class="required-star">*</span></label>
+                        <div class="severity-group">
+                            <label class="severity-option severity-low">
+                                <input type="radio" name="severity" value="کم" required />
+                                <i class="fas fa-circle" style="color:#16a34a; font-size:0.7rem;"></i> کم
+                            </label>
+                            <label class="severity-option severity-medium">
+                                <input type="radio" name="severity" value="متوسط" />
+                                <i class="fas fa-circle" style="color:#d97706; font-size:0.7rem;"></i> متوسط
+                            </label>
+                            <label class="severity-option severity-high">
+                                <input type="radio" name="severity" value="بالا" />
+                                <i class="fas fa-circle" style="color:#ea580c; font-size:0.7rem;"></i> بالا
+                            </label>
+                            <label class="severity-option severity-critical">
+                                <input type="radio" name="severity" value="بحرانی" />
+                                <i class="fas fa-circle" style="color:#b91c1c; font-size:0.7rem;"></i> بحرانی
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- ROW 3: TYPE + INITIAL ACTION -->
+                    <div class="row-2col">
+                        <div class="form-group">
+                            <label><i class="fas fa-tag" style="color:var(--primary); margin-left:6px;"></i>نوع عدم انطباق</label>
+                            <select id="type">
+                                <option value="ایمنی">ایمنی (HSE)</option>
+                                <option value="کیفیت">کیفیت</option>
+                                <option value="زیست‌محیطی">زیست‌محیطی</option>
+                                <option value="بهداشتی">بهداشتی</option>
+                                <option value="فرآیندی">فرآیندی</option>
+                                <option value="سایر">سایر</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-tools" style="color:var(--primary); margin-left:6px;"></i>اقدام اولیه انجام‌شده <span class="optional-badge">اختیاری</span></label>
+                            <textarea id="initialAction" placeholder="چه اقدامی در لحظه انجام دادید؟" style="min-height:70px;"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- ATTACHMENT -->
+                    <div class="form-group">
+                        <label><i class="fas fa-paperclip" style="color:var(--primary); margin-left:6px;"></i>ضمیمه (عکس / مدرک) <span class="optional-badge">اختیاری</span></label>
+                        <div class="file-upload-area" id="fileDropArea">
+                            <span class="file-upload-icon"><i class="fas fa-cloud-upload-alt"></i></span>
+                            <div class="file-upload-text">
+                                <strong>جهت آپلود کلیک کنید</strong> یا فایل را بکشید و رها کنید
+                                <span class="hint">
+                                    <i class="fas fa-file-image"></i> JPG, PNG &nbsp;|&nbsp;
+                                    <i class="fas fa-file-pdf"></i> PDF &nbsp;|&nbsp;
+                                    <i class="fas fa-file-word"></i> DOC, DOCX &nbsp;|&nbsp;
+                                    حداکثر ۵ مگابایت
+                                </span>
+                            </div>
+                            <input type="file" id="attachment" accept="image/*,.pdf,.doc,.docx" />
+                        </div>
+
+                        <div class="file-preview" id="filePreview">
+                            <div class="file-info">
+                                <span class="file-icon" id="fileIcon"><i class="fas fa-file-alt"></i></span>
+                                <div>
+                                    <div class="file-name" id="fileName">نام فایل</div>
+                                    <div class="file-size" id="fileSize">۰ کیلوبایت</div>
+                                </div>
+                            </div>
+                            <img class="file-thumbnail" id="fileThumbnail" alt="پیش‌نمایش" />
+                            <button type="button" class="file-remove" id="fileRemove"><i class="fas fa-times"></i> حذف</button>
+                        </div>
+                    </div>
+
+                    <!-- STATUS MESSAGE -->
+                    <div id="statusMsg" class="status-msg"></div>
+
+                    <!-- SUBMIT BUTTON -->
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i> ارسال گزارش عدم انطباق
+                    </button>
+
+                </form>
+
+                <!-- NOTE BOX -->
+                <div class="note-box">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <strong>نکته:</strong> پس از ارسال، یک کپی از گزارش به ایمیل HSE ارسال خواهد شد و اطلاعات در سرور ذخیره می‌گردد.
+                    </div>
+                </div>
+
+            </div>  <!-- /.card -->
+
+
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            تهیه شده توسط <span class="highlight">مهندس فرشید نگهداری</span> و <span class="highlight">مهندس حسین زارعی</span><br>
+            <span style="direction:ltr; display:inline-block;">📞 09178680173</span>
+        </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- EMAILJS + Google Apps Script -->
+    <!-- ============================================================ -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
+
+    <script>
+        // ============================================================
+        // 🔑 تنظیمات EmailJS
+        // ============================================================
+        const EMAILJS_CONFIG = {
+            PUBLIC_KEY: 'i0H5JBzN32Kxg5NPw',
+            SERVICE_ID: 'service_hse',
+            TEMPLATE_ID: 'template_vpc0hid'
+        };
+
+        // ============================================================
+        // 🔑 آدرس Web App گوگل
+        // ============================================================
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxayBKtmpPrhc6tORqNPv3DM4h0uuBG-uJYIMg90l6x_qH0o-iSxku8tFgJR9J6eK5iow/exec';
+
+        // ============================================================
+        // متغیرها
+        // ============================================================
+        const form = document.getElementById('ncrForm');
+        const statusMsg = document.getElementById('statusMsg');
+        const submitBtn = document.getElementById('submitBtn');
+
+        const fileInput = document.getElementById('attachment');
+        const filePreview = document.getElementById('filePreview');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const fileIcon = document.getElementById('fileIcon');
+        const fileThumbnail = document.getElementById('fileThumbnail');
+        const fileRemove = document.getElementById('fileRemove');
+        const dropArea = document.getElementById('fileDropArea');
+
+        let selectedFile = null;
+
+        // ============================================================
+        // مقداردهی EmailJS
+        // ============================================================
+        (function() {
+            if (EMAILJS_CONFIG.PUBLIC_KEY && EMAILJS_CONFIG.PUBLIC_KEY !== 'YOUR_PUBLIC_KEY_HERE') {
+                emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+                console.log('✅ EmailJS مقداردهی شد.');
+            } else {
+                console.warn('⚠️ EmailJS تنظیم نشده است.');
+            }
+        })();
+
+        // ============================================================
+        // توابع کمکی
+        // ============================================================
+        function showStatus(type, message) {
+            statusMsg.className = 'status-msg ' + type;
+            statusMsg.innerHTML = message;
+            statusMsg.style.display = 'block';
+            clearTimeout(window.statusTimeout);
+            window.statusTimeout = setTimeout(() => {
+                statusMsg.style.display = 'none';
+            }, 8000);
+        }
+
+        function getSelectedSeverity() {
+            const radios = document.querySelectorAll('input[name="severity"]');
+            for (let r of radios) {
+                if (r.checked) return r.value;
+            }
+            return '';
+        }
+
+        function toPersianDate(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr + 'T00:00:00');
+            return d.toLocaleDateString('fa-IR', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' بایت';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' کیلوبایت';
+            return (bytes / 1048576).toFixed(1) + ' مگابایت';
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64 = e.target.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = function(e) {
+                    reject(e);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ============================================================
+        // مدیریت فایل (پیش‌نمایش)
+        // ============================================================
+        function showFilePreview(file) {
+            selectedFile = file;
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+
+            const ext = file.name.split('.').pop().toLowerCase();
+            const imageExts = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'];
+
+            if (imageExts.includes(ext)) {
+                fileIcon.innerHTML = '<i class="fas fa-image" style="color:var(--primary);"></i>';
+                fileThumbnail.classList.add('show');
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    fileThumbnail.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else if (ext === 'pdf') {
+                fileIcon.innerHTML = '<i class="fas fa-file-pdf" style="color:#dc2626;"></i>';
+                fileThumbnail.classList.remove('show');
+            } else if (['doc', 'docx'].includes(ext)) {
+                fileIcon.innerHTML = '<i class="fas fa-file-word" style="color:var(--primary);"></i>';
+                fileThumbnail.classList.remove('show');
+            } else {
+                fileIcon.innerHTML = '<i class="fas fa-file-alt" style="color:#64748b;"></i>';
+                fileThumbnail.classList.remove('show');
+            }
+
+            filePreview.classList.add('show');
+        }
+
+        function removeFile() {
+            selectedFile = null;
+            fileInput.value = '';
+            filePreview.classList.remove('show');
+            fileThumbnail.classList.remove('show');
+            fileThumbnail.src = '';
+        }
+
+        fileInput.addEventListener('change', function(e) {
+            if (this.files && this.files.length > 0) {
+                const file = this.files[0];
+                if (file.size > 5 * 1024 * 1024) {
+                    showStatus('error', '❌ حجم فایل نباید بیشتر از ۵ مگابایت باشد.');
+                    this.value = '';
+                    return;
+                }
+                showFilePreview(file);
+                statusMsg.style.display = 'none';
+            } else {
+                removeFile();
+            }
+        });
+
+        fileRemove.addEventListener('click', removeFile);
+
+        dropArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+        dropArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+        });
+        dropArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.size > 5 * 1024 * 1024) {
+                    showStatus('error', '❌ حجم فایل نباید بیشتر از ۵ مگابایت باشد.');
+                    return;
+                }
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                fileInput.files = dt.files;
+                showFilePreview(file);
+                statusMsg.style.display = 'none';
+            }
+        });
+
+        // ============================================================
+        // مقداردهی پیش‌فرض تاریخ
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            document.getElementById('date').value = year + '-' + month + '-' + day;
+        });
+
+        // ============================================================
+        // SUBMIT FORM - ارسال همزمان به EmailJS + Google Drive
+        // ============================================================
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // ---- اعتبارسنجی ----
+            const name = document.getElementById('name').value.trim();
+            const position = document.getElementById('position').value.trim();
+            const department = document.getElementById('department').value.trim();
+            const date = document.getElementById('date').value;
+            const description = document.getElementById('description').value.trim();
+            const location = document.getElementById('location').value.trim();
+            const severity = getSelectedSeverity();
+
+            if (!name || !position || !department || !date || !description || !location || !severity) {
+                showStatus('error', '❌ لطفاً تمام فیلدهای الزامی (علامت‌دار) را پر کنید.');
+                return;
+            }
+
+            // ---- تغییر دکمه ----
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> در حال ارسال ...';
+            showStatus('loading', '⏳ در حال ارسال گزارش... لطفاً صبر کنید.');
+
+            // ---- آماده‌سازی داده‌ها ----
+            const reportData = {
+                name: name,
+                position: position,
+                department: department,
+                date: toPersianDate(date),
+                description: description,
+                location: location,
+                severity: severity,
+                type: document.getElementById('type').value,
+                initialAction: document.getElementById('initialAction').value.trim() || 'اقدامی ثبت نشده',
+                attachment_name: selectedFile ? selectedFile.name : 'بدون ضمیمه',
+                attachment_size: selectedFile ? formatFileSize(selectedFile.size) : '-'
+            };
+
+            // ---- متغیر برای ذخیره خطاها ----
+            let emailjsError = null;
+            let driveError = null;
+            let driveSuccess = false;
+
+            // ============================================================
+            // 1️⃣ ارسال به EmailJS (متن گزارش)
+            // ============================================================
+            if (EMAILJS_CONFIG.PUBLIC_KEY && EMAILJS_CONFIG.PUBLIC_KEY !== 'YOUR_PUBLIC_KEY_HERE') {
+                try {
+                    await emailjs.send(
+                        EMAILJS_CONFIG.SERVICE_ID,
+                        EMAILJS_CONFIG.TEMPLATE_ID,
+                        reportData
+                    );
+                    console.log('✅ EmailJS ارسال شد.');
+                } catch (error) {
+                    console.error('❌ خطا در EmailJS:', error);
+                    emailjsError = error.text || 'خطا در ارسال ایمیل';
+                }
+            } else {
+                emailjsError = 'EmailJS تنظیم نشده است';
+            }
+
+            // ============================================================
+            // 2️⃣ ارسال به Google Drive (فایل + گزارش) + ثبت ردیف در شیت
+            // ============================================================
+            try {
+                const driveData = { ...reportData, action: 'save_report' };
+                if (selectedFile) {
+                    const base64Data = await fileToBase64(selectedFile);
+                    driveData.data = base64Data;
+                    driveData.filename = selectedFile.name;
+                    driveData.mimetype = selectedFile.type;
+                }
+
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(driveData)
+                });
+                driveSuccess = true;
+                console.log('✅ گوگل درایو + شیت: درخواست ارسال شد.');
+            } catch (error) {
+                console.error('❌ خطا در ارسال به گوگل درایو:', error);
+                driveError = 'خطا در ذخیره فایل';
+            }
+
+            // ============================================================
+            // 3️⃣ نمایش نتیجه نهایی
+            // ============================================================
+            if (driveSuccess && !emailjsError) {
+                showStatus('success', '✅ گزارش با موفقیت به گوگل درایو و ایمیل ارسال شد!');
+                form.reset();
+                document.querySelectorAll('input[name="severity"]').forEach(r => r.checked = false);
+                removeFile();
+            } else if (driveSuccess && emailjsError) {
+                showStatus('success', '✅ گزارش به گوگل درایو ارسال شد. (⚠️ ایمیل ارسال نشد: ' + emailjsError + ')');
+                form.reset();
+                document.querySelectorAll('input[name="severity"]').forEach(r => r.checked = false);
+                removeFile();
+            } else if (!driveSuccess && !emailjsError) {
+                showStatus('error', '❌ خطا در ارسال به گوگل درایو. لطفاً دوباره تلاش کنید.');
+            } else {
+                showStatus('error', '❌ خطا در ارسال. لطفاً دوباره تلاش کنید.');
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> ارسال گزارش عدم انطباق';
+        });
+    </script>
+
+<script src="hse-common.js"></script>
+
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a18100dfd90e516a',t:'MTc4MzUzMzc4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
