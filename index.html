@@ -18,6 +18,11 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#1e3c5c" />
+    <meta name="application-name" content="HSE DORKAV" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/hse-dorkav-192.png" />
+    <link rel="apple-touch-icon" href="icons/hse-dorkav-192.png" />
     <title>سامانه ایمنی شرکت درکاو [v4.0]</title>
 
     <!-- Fonts -->
@@ -2236,7 +2241,6 @@
                 <div class="drawer-divider"></div>
                 <button class="drawer-item" onclick="document.getElementById('drawerOverlay').classList.remove('open'); document.getElementById('emergencySection').scrollIntoView({behavior:'smooth'});"><span class="d-icon">📞</span> شماره‌های اضطراری</button>
                 <button class="drawer-item" id="drawerSettingsBtn"><span class="d-icon">⚙️</span> تنظیمات ظاهری</button>
-                <button class="drawer-item" id="drawerStorageBtn"><span class="d-icon">💾</span> مدیریت حافظه</button>
                 <div class="drawer-divider"></div>
                 <button class="drawer-item" id="drawerBackBtn"><span class="d-icon">↩️</span> صفحه قبلی</button>
                 <button class="drawer-item" id="drawerExitBtn" style="color:#dc2626;"><span class="d-icon">🚪</span> خروج از سامانه</button>
@@ -2870,7 +2874,6 @@
                     <button class="settings-tab active" data-tab="appearance">🎨 ظاهر</button>
                     <button class="settings-tab" data-tab="colors">🎯 رنگ‌ها</button>
                     <button class="settings-tab" data-tab="advanced">🔧 پیشرفته</button>
-                    <button class="settings-tab" data-tab="storage">💾 حافظه</button>
                 </div>
 
                 <!-- تب ظاهر -->
@@ -3046,47 +3049,6 @@
                     </div>
                 </div>
 
-                <!-- تب حافظه -->
-                <div class="tab-content" id="tab-storage">
-                    <div class="setting-group">
-                        <div class="group-title">💾 وضعیت حافظه</div>
-                        <div id="storageStatusArea">
-                            <div class="storage-stat">
-                                <span class="stat-icon">💾</span>
-                                <div class="stat-info">
-                                    <div class="stat-title">حافظه پایدار</div>
-                                    <div class="stat-value" id="persistStatus">در حال بررسی...</div>
-                                </div>
-                                <span class="stat-status pending" id="persistBadge">⏳</span>
-                            </div>
-                            <div class="storage-stat">
-                                <span class="stat-icon">📊</span>
-                                <div class="stat-info">
-                                    <div class="stat-title">فضای استفاده شده</div>
-                                    <div class="stat-value" id="storageUsage">در حال محاسبه...</div>
-                                </div>
-                            </div>
-                            <div class="storage-progress">
-                                <div class="fill" id="storageProgressFill" style="width:0%"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="setting-group">
-                        <div class="group-title">📁 فایل‌های ذخیره شده</div>
-                        <div id="storedFilesList" style="font-size:0.8rem; color: var(--text-muted);">
-                            در حال بارگذاری...
-                        </div>
-                    </div>
-
-                    <div class="btn-row">
-                        <button class="modal-btn success-btn" id="requestStorageBtn">🔓 درخواست مجوز حافظه پایدار</button>
-                        <button class="modal-btn" id="cacheContactsBtn">📱 ذخیره مخاطبین اضطراری</button>
-                        <button class="modal-btn default-btn" id="cacheSDSBtn">📄 ذخیره فایل‌های SDS</button>
-                        <button class="modal-btn danger-btn" id="clearStorageBtn">🗑️ پاکسازی حافظه کش</button>
-                    </div>
-                </div>
-
                 <div class="btn-row" style="margin-top:16px; border-top: 1px solid rgba(0,0,0,0.06); padding-top:14px;">
                     <button class="modal-btn" id="saveSettings">💾 ذخیره تنظیمات</button>
                     <div class="btn-row-horizontal">
@@ -3190,91 +3152,6 @@
             
             updatePreview();
             showToast('🔄 تنظیمات به حالت پیش‌فرض برگشت.', 'success', 2500);
-        };
-
-        // ===== STORAGE TAB LOGIC =====
-        loadStorageInfo(modal);
-        
-        modal.querySelector('#requestStorageBtn').onclick = async function() {
-            const granted = await requestPersistentStorage();
-            if (granted) {
-                showToast('✅ مجوز حافظه پایدار اعطا شد!', 'success');
-                modal.querySelector('#persistStatus').textContent = 'فعال و پایدار';
-                modal.querySelector('#persistBadge').className = 'stat-status granted';
-                modal.querySelector('#persistBadge').textContent = '✅ فعال';
-            } else {
-                showToast('⚠️ مجوز حافظه رد شد', 'warning');
-                modal.querySelector('#persistStatus').textContent = 'رد شده';
-                modal.querySelector('#persistBadge').className = 'stat-status denied';
-                modal.querySelector('#persistBadge').textContent = '❌ رد';
-            }
-        };
-
-        modal.querySelector('#cacheContactsBtn').onclick = async function() {
-            try {
-                let vcard = "";
-                emergencyContacts.forEach(c => {
-                    vcard += `BEGIN:VCARD\nVERSION:3.0\nFN:${c.label}\nTEL:${c.number}\nEND:VCARD\n`;
-                });
-                await storeFile('emergency_contacts.vcf', vcard, 'vcard');
-                for (let i = 0; i < emergencyContacts.length; i++) {
-                    await storeFile('contact_' + i, JSON.stringify(emergencyContacts[i]), 'contact');
-                }
-                showToast('✅ مخاطبین اضطراری در حافظه ذخیره شد!', 'success');
-                loadStorageInfo(modal);
-            } catch(e) {
-                showToast('⚠️ خطا: ' + e, 'danger');
-            }
-        };
-
-        modal.querySelector('#cacheSDSBtn').onclick = async function() {
-            try {
-                // تلاش برای کش کردن صفحه SDS
-                if ('caches' in window) {
-                    const cache = await caches.open('hse-sds-v1');
-                    try {
-                        await cache.add('sds/index.html');
-                        showToast('✅ صفحه SDS در کش ذخیره شد!', 'success');
-                    } catch(e) {
-                        // اگر آفلاین یا خطا، یک placeholder ذخیره کن
-                        await storeFile('sds_placeholder', JSON.stringify({
-                            url: 'sds/index.html',
-                            cached: true,
-                            timestamp: Date.now()
-                        }), 'sds_meta');
-                        showToast('📌 اطلاعات SDS ثبت شد (آفلاین در دسترس)', 'success');
-                    }
-                } else {
-                    await storeFile('sds_info', JSON.stringify({
-                        note: 'SDS برگه ایمنی مواد',
-                        timestamp: Date.now()
-                    }), 'sds_meta');
-                    showToast('📌 اطلاعات SDS ذخیره شد', 'success');
-                }
-                loadStorageInfo(modal);
-            } catch(e) {
-                showToast('⚠️ خطا: ' + e, 'danger');
-            }
-        };
-
-        modal.querySelector('#clearStorageBtn').onclick = async function() {
-            if (!confirm('آیا مطمئن هستید؟ همه فایل‌های کش پاک می‌شوند.')) return;
-            try {
-                // پاک کردن IndexedDB
-                if (hseDB) {
-                    const tx = hseDB.transaction('files', 'readwrite');
-                    tx.objectStore('files').clear();
-                }
-                // پاک کردن Cache API
-                if ('caches' in window) {
-                    const keys = await caches.keys();
-                    await Promise.all(keys.filter(k => k.startsWith('hse-')).map(k => caches.delete(k)));
-                }
-                showToast('🗑️ حافظه کش پاک شد.', 'success');
-                loadStorageInfo(modal);
-            } catch(e) {
-                showToast('⚠️ خطا در پاکسازی', 'danger');
-            }
         };
 
         // ذخیره تنظیمات
@@ -3427,15 +3304,6 @@
     document.getElementById('drawerSettingsBtn').onclick = function() {
         drawerOverlay.classList.remove('open');
         openSettings();
-    };
-    document.getElementById('drawerStorageBtn').onclick = function() {
-        drawerOverlay.classList.remove('open');
-        openSettings();
-        // باز کردن تب حافظه
-        setTimeout(() => {
-            const storageTab = document.querySelector('[data-tab="storage"]');
-            if (storageTab) storageTab.click();
-        }, 300);
     };
     document.getElementById('drawerBackBtn').onclick = function() {
         drawerOverlay.classList.remove('open');
@@ -3921,6 +3789,20 @@
   };
 
 })();
+</script>
+<!-- ثبت Service Worker؛ روی HTTPS یا localhost فعال می‌شود. -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('./sw.js', { scope: './' })
+        .then(function (registration) {
+          console.log('HSE Service Worker registered:', registration.scope);
+        })
+        .catch(function (error) {
+          console.warn('HSE Service Worker registration failed:', error);
+        });
+    });
+  }
 </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1bb3e476b25d982',t:'MTc4NDE0NDQ3Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
