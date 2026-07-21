@@ -2441,21 +2441,15 @@
         }
     }
     
-    // برگشت به صفحه قبلی
+    // برگشت ایمن درون‌برنامه‌ای
+    // عمداً از history.back استفاده نمی‌کنیم؛ در WebView/اندروید ممکن است کاربر
+    // را از نرم‌افزار خارج کند و باعث تصورِ خروج یا ورود مجدد شود.
     function goBack() {
-        if (window.history.length > 1) {
-            window.history.back();
-        } else if (navHistory.length > 0) {
-            const prevPage = navHistory.pop();
-            currentPage = prevPage;
-            // اسکرول به بالا
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            showToast('↩️ بازگشت به صفحه قبلی', 'info', 1500);
-        } else {
-            // هیچ تاریخچه‌ای نیست - اسکرول به بالا
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            showToast('🏠 در صفحه اصلی هستید', 'info', 1500);
+        if (navHistory.length > 0) {
+            currentPage = navHistory.pop();
         }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showToast('🏠 بازگشت به صفحه اصلی سامانه', 'info', 1500);
     }
     
     // دکمه برگشت هدر
@@ -2492,7 +2486,7 @@
         const dialog = document.querySelector('.exit-dialog');
         if (dialog) dialog.remove();
         
-        showToast('👋 خدانگهدار! در حال خروج...', 'info', 1500);
+        showToast('👋 خروج موقت انجام شد؛ اطلاعات ورود شما حفظ می‌شود.', 'info', 1500);
         
         // ذخیره وضعیت قبل از خروج
         localStorage.setItem('hse_last_exit', new Date().toISOString());
@@ -2504,12 +2498,9 @@
                 try { window.navigator.app.exitApp(); } catch(e) {}
             }
             
-            // بازگشت به صفحه فعالسازی
-            document.getElementById('activation-overlay').classList.remove('hidden');
-            localStorage.removeItem('hse_user_activated');
-            localStorage.removeItem('hse_user_permissions');
-            
-            // اسکرول به بالا
+            // خروج موقت: نشست و مجوزهای کاربر حذف نمی‌شوند.
+            // در مرورگر، بستن واقعی تب معمولاً مجاز نیست؛ با بازگشایی سامانه
+            // checkActivation نشست ذخیره‌شده را بازیابی خواهد کرد.
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }, 1200);
     }
@@ -2517,18 +2508,13 @@
     // دکمه خروج هدر
     document.getElementById('exitBtn').onclick = showExitDialog;
     
-    // مدیریت دکمه برگشت اندروید
-    window.addEventListener('popstate', function(e) {
-        e.preventDefault();
-        showExitDialog();
-    });
-    
-    // اضافه کردن state به history برای مدیریت برگشت
+    // دکمه Back فیزیکی مرورگر/اندروید نیز داخل سامانه نگه داشته می‌شود.
+    // یک state محافظ کافی است؛ listener تکراری باعث خروج ناخواسته می‌شد.
     if (window.history && window.history.pushState) {
-        window.history.pushState({ page: 'home' }, '', '');
+        window.history.pushState({ page: 'hse-home' }, '', window.location.href);
         window.addEventListener('popstate', function() {
-            window.history.pushState({ page: 'home' }, '', '');
-            showExitDialog();
+            window.history.pushState({ page: 'hse-home' }, '', window.location.href);
+            goBack();
         });
     }
     
@@ -3896,15 +3882,33 @@
   let enforceInterval = setInterval(enforce, 300);
   setTimeout(function() { clearInterval(enforceInterval); }, 10000);
 
+  // در refresh، اسکریپت اصلی ممکن است پیش از این enforcer مجوزها را اعمال کرده باشد.
+  // بنابراین وضعیت مجاز را از نشست همان کاربر بازیابی می‌کنیم، نه اینکه همه را مخفی کنیم.
+  function restoreAllowedFromSession() {
+    try {
+      const user = JSON.parse(localStorage.getItem('hse_user_activated') || 'null');
+      const byUser = JSON.parse(localStorage.getItem('hse_user_permissions_by_user') || '{}');
+      const perms = (user && user.personnel && byUser[user.personnel]) ||
+                    JSON.parse(localStorage.getItem('hse_user_permissions') || '{}');
+      currentAllowed = {};
+      if (perms && typeof perms === 'object') {
+        Object.keys(perms).forEach(function(key) {
+          if (perms[key] === true) currentAllowed[key] = true;
+        });
+      }
+    } catch (e) {
+      currentAllowed = {};
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
-    hideAllPermissionItems();
+    restoreAllowedFromSession();
     startObserving();
     enforce();
   });
 
   window.addEventListener('load', function() {
     setTimeout(function() {
-      hideAllPermissionItems();
       startObserving();
       enforce();
       console.log('🛡️ Final enforce after load - allowed:', currentAllowed);
