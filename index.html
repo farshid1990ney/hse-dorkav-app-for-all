@@ -2686,7 +2686,7 @@
 
     <!-- ===== FOOTER ===== -->
     <div class="footer">
-تهیه شده توسط <span class="highlight">شرکت معدنی و صنایع معدنی درکاو</span>
+        تهیه شده توسط <span class="highlight">مهندس فرشید نگهداری</span> و <span class="highlight">مهندس حسین زارعی</span>
     </div>
 
 </div>
@@ -4455,7 +4455,7 @@
     params = params || {};
     params.action = 'admin_api';
     params.sub = sub;
-    if (sub !== 'login') params.token = tok();
+    if (sub !== 'login' && sub !== 'auto_login') params.token = tok();
     var body = new URLSearchParams(params).toString();
     var res = await fetch(EP, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body });
     var data = await res.json();
@@ -4483,7 +4483,34 @@
 
   function openPanel() {
     ov.classList.add('open');
-    if (tok()) { showContent(); loadUsers(); loadStats(); } else showLogin();
+    if (tok()) { showContent(); loadUsers(); loadStats(); return; }
+    tryAutoLogin();
+  }
+
+  // ★ ورود خودکار به پنل مدیریت با همان هویت (کد ملی + شماره پرسنلی) که فرد
+  // برای ورود عادی به سامانه استفاده کرده — بدون تایپ رمز مدیر. تشخیص واقعی
+  // سمت سرور انجام می‌شود (در برابر فهرستی که فقط در Script Properties است)؛
+  // این کد فقط هر چه در localStorage خود همان مرورگر ذخیره شده را می‌فرستد،
+  // پس هیچ کد ملی/پرسنلی خاصی داخل این فایل نوشته نشده است.
+  function tryAutoLogin() {
+    var stored = null;
+    try { stored = JSON.parse(localStorage.getItem('hse_user_activated') || 'null'); } catch (e) {}
+    if (!stored || !stored.personnel || !stored.national) { showLogin(); return; }
+    showLoginBusy();
+    api('auto_login', { personnel: stored.personnel, national: stored.national }).then(function(d) {
+      if (d && d.success && d.token) {
+        sessionStorage.setItem(TOKEN_KEY, d.token);
+        showContent(); loadUsers(); loadStats();
+      } else {
+        showLogin();
+      }
+    }).catch(function() { showLogin(); });
+  }
+  function showLoginBusy() {
+    document.getElementById('admLoginCard').style.display = 'block';
+    document.getElementById('admContent').style.display = 'none';
+    var err = document.getElementById('admLoginErr');
+    if (err) err.style.display = 'none';
   }
   function showLogin() {
     document.getElementById('admLoginCard').style.display = 'block';
