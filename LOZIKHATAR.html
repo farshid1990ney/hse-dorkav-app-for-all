@@ -1,6 +1,46 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
+
+<script>
+/* ============================================================
+   ★ امنیت: گیت احراز هویت (سمت کلاینت)
+   هیچ صفحه‌ای بدون ورود به سامانه باز نمی‌شود. محتوای صفحه
+   مخفی می‌ماند و کاربر به صفحه ورود هدایت می‌شود.
+   (لایه نمایشی؛ لایه امنیتی واقعی در بکاند اعمال می‌شود.)
+   ============================================================ */
+(function(){
+  var ok = false;
+  try {
+    var _u = JSON.parse(localStorage.getItem('hse_user_activated') || 'null');
+    ok = !!(_u && _u.personnel && _u.fullname);
+  } catch(e) { ok = false; }
+  if (ok) return; // مجاز - ادامه می‌دهد
+
+  // پنهان‌کردن کل محتوا و نمایش قفل
+  var hide = function(){
+    try {
+      var d = document;
+      // مخفی کردن همه عناصر
+      var all = d.body ? d.body.children : [];
+      for (var i=0;i<all.length;i++){ all[i].style.display='none'; }
+      var lock = d.createElement('div');
+      lock.style.cssText = 'position:fixed;inset:0;z-index:999999;background:#0f172a;color:#f8fafc;'
+        +'display:flex;flex-direction:column;align-items:center;justify-content:center;'
+        +'font-family:Tahoma,sans-serif;text-align:center;padding:20px;direction:rtl;';
+      lock.innerHTML = '<div style="font-size:60px;margin-bottom:10px;">🔒</div>'
+        +'<h2 style="margin:0 0 8px;">دسترسی محدود است</h2>'
+        +'<p style="margin:0 0 20px;color:#94a3b8;">لطفاً ابتدا از صفحه اصلی وارد سامانه شوید.</p>'
+        +'<a href="index.html" style="background:#ff6208;color:#fff;padding:10px 26px;'
+        +'border-radius:10px;text-decoration:none;font-weight:bold;">بازگشت به صفحه ورود</a>';
+      d.body.appendChild(lock);
+    } catch(e){}
+  };
+  if (document.body) hide(); else document.addEventListener('DOMContentLoaded', hide);
+  setTimeout(function(){ try{ location.replace('index.html'); }catch(e){} }, 2500);
+})();
+</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NFPA 704 - تحلیل خطرات مواد شیمیایی</title>
@@ -8,11 +48,12 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
+body { padding-bottom: 75px !important;
     background: linear-gradient(145deg, #e9eef3 0%, #d4dfe9 100%);
     font-family: 'Segoe UI', Tahoma, sans-serif;
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 20px;
@@ -467,6 +508,6 @@ legendToggle.addEventListener('click', () => {
 <script src="hse-common.js"></script>
 
 
-<div style="text-align:center;padding:15px;font-size:0.85rem;color:#666;border-top:1px solid #eee;margin-top:20px;">تهیه شده توسط <strong>مهندس فرشید نگهداری</strong> و <strong>مهندس حسین زارعی</strong></div>
+<div style="text-align:center;padding:15px;font-size:0.85rem;color:#666;border-top:1px solid #eee;margin-top:20px;">تهیه شده توسط <strong>شرکت معدنی و صنایع معدنی درکاو</strong></div>
 </body>
 </html>
